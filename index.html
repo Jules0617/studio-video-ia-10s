@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#080a10" />
+  <link rel="manifest" href="/manifest.json" />
+  <title>Studio Vidéo IA 10s — Sans Quota ZeroGPU • 100% Gratuit</title>
+  <style>
+    :root {
+      --bg: #080a10;
+      --card: #121726;
+      --card-border: #232c43;
+      --primary: #7c5cff;
+      --primary-glow: rgba(124, 92, 255, 0.35);
+      --accent: #00e5a3;
+      --accent-soft: rgba(0, 229, 163, 0.14);
+      --text: #f3f6fc;
+      --muted: #94a1b8;
+      --danger: #ff5c7c;
+      --warn: #ffb84d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at 50% 0%, #192038 0%, var(--bg) 60%);
+      color: var(--text);
+      min-height: 100vh;
+      padding-bottom: 96px;
+      line-height: 1.45;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(8, 10, 16, 0.88);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 11px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 800;
+      color: #080a10;
+      box-shadow: 0 4px 16px var(--primary-glow);
+      flex-shrink: 0;
+    }
+
+    .brand-text h1 {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: -0.2px;
+    }
+
+    .brand-text p {
+      font-size: 11px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .badge-free {
+      background: var(--accent-soft);
+      color: var(--accent);
+      border: 1px solid rgba(0, 229, 163, 0.35);
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    main {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .tab-section {
+      display: none;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .tab-section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 14px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.32);
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .card-sub {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+
+    .model-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 440px) {
+      .model-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .model-btn {
+      background: #171d2e;
+      border: 1.5px solid var(--card-border);
+      border-radius: 13px;
+      padding: 10px 12px;
+      text-align: left;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .model-btn.active {
+      border-color: var(--accent);
+      background: rgba(0, 229, 163, 0.1);
+      box-shadow: 0 0 0 2px rgba(0, 229, 163, 0.18);
+    }
+
+    .model-btn .m-name {
+      font-size: 13px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+    }
+
+    .model-btn .m-desc {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 3px;
+    }
+
+    .tag-pill {
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    label {
+      display: block;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #d7dfef;
+    }
+
+    textarea, input[type="text"], input[type="password"], select {
+      width: 100%;
+      background: #0b0e17;
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    textarea:focus, input:focus, select:focus {
+      border-color: var(--primary);
+    }
+
+    textarea {
+      min-height: 92px;
+      resize: vertical;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .row-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 520px) {
+      .row-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .prompt-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: 8px;
+      margin-bottom: 12px;
+    }
+
+    .chip-btn {
+      background: #1a2133;
+      color: #d6def0;
+      border: 1px solid #2b3654;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s;
+    }
+
+    .chip-btn.magic {
+      background: rgba(124, 92, 255, 0.2);
+      border-color: rgba(124, 92, 255, 0.55);
+      color: #d8cbff;
+    }
+
+    .btn-primary {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 18px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #fff;
+      background: linear-gradient(135deg, var(--primary), #5632ff);
+      box-shadow: 0 6px 20px var(--primary-glow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: transform 0.1s, opacity 0.15s;
+    }
+
+    .btn-primary:active {
+      transform: scale(0.985);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 11px 14px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: var(--text);
+      background: #182032;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      margin-top: 8px;
+    }
+
+    .status-box {
+      display: none;
+      margin-top: 14px;
+      padding: 13px;
+      border-radius: 12px;
+      background: #0d121d;
+      border: 1px solid var(--card-border);
+      font-size: 13px;
+    }
+
+    .status-box.show {
+      display: block;
+    }
+
+    .progress-bar-wrap {
+      width: 100%;
+      height: 6px;
+      background: #1a2236;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 15px;
+      height: 15px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 6px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .video-output {
+      display: none;
+      margin-top: 14px;
+    }
+
+    .video-output.show {
+      display: block;
+    }
+
+    video {
+      width: 100%;
+      border-radius: 14px;
+      background: #000;
+      border: 1px solid var(--card-border);
+      max-height: 440px;
+    }
+
+    .upload-zone {
+      border: 1.5px dashed #344163;
+      border-radius: 14px;
+      padding: 18px;
+      text-align: center;
+      background: #0d111b;
+      margin-bottom: 12px;
+      cursor: pointer;
+    }
+
+    .upload-zone img {
+      max-height: 180px;
+      border-radius: 10px;
+      margin-top: 10px;
+      display: none;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .iframe-wrap {
+      width: 100%;
+      height: 660px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--card-border);
+      background: #0b0e16;
+    }
+
+    .iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .gallery-item {
+      background: #0e1320;
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .gallery-meta {
+      font-size: 12px;
+      color: var(--muted);
+      margin: 8px 0;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 60;
+      background: rgba(10, 13, 22, 0.95);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 6px 6px 10px;
+    }
+
+    .nav-item {
+      background: none;
+      border: none;
+      color: var(--muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      padding: 6px 2px;
+      font-size: 10.5px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 17px;
+    }
+
+    .nav-item.active {
+      color: var(--text);
+      background: rgba(124, 92, 255, 0.18);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">▶</div>
+      <div class="brand-text">
+        <h1>Studio Vidéo IA 10s</h1>
+        <p>GPU Dédié Sans Quota ZeroGPU • Français & Anglais</p>
+      </div>
+    </div>
+    <span class="badge-free">SANS QUOTA</span>
+  </header>
+
+  <main>
+    <!-- ONGLET 1 : TEXTE VERS VIDEO (SANS QUOTA ZEROGPU) -->
+    <section id="tab-t2v" class="tab-section active">
+      <div class="card">
+        <div class="card-title">
+          <span>🎬 Générer une Vidéo Réaliste (Sans Quota ZeroGPU)</span>
+          <span class="tag-pill">GPU Dédié Actif</span>
+        </div>
+        <p class="card-sub">
+          Connecté en priorité au cluster <strong>GPU Dédié Alibaba PAI (EasyAnimate V5.1 12B)</strong> qui <strong>n'utilise pas ZeroGPU</strong> : aucune erreur de quota sur votre téléphone, même sans compte ni token !
+        </p>
+
+        <div class="model-grid" id="t2vModelGrid">
+          <button type="button" class="model-btn active" onclick="selectT2VModel('alibaba_eas', this)">
+            <div class="m-name">🔥 GPU Dédié 12B (Sans Quota) <span class="tag-pill">0 Quota</span></div>
+            <div class="m-desc">Alibaba Cloud EAS • 12 Milliards de paramètres • Fonctionne toujours</div>
+          </button>
+
+          <button type="button" class="model-btn" onclick="selectT2VModel('alibaba_10s', this)">
+            <div class="m-name">🎞️ Mode Film 10s (2 Plans) <span class="tag-pill">10 sec</span></div>
+            <div class="m-desc">Génère 2 scènes consécutives sur le GPU Dédié et les enchaîne</div>
+          </button>
+
+          <button type="button" class="model-btn" onclick="selectT2VModel('ltx_auto', this)">
+            <div class="m-name">⚡ Lightricks LTX + Secours <span class="tag-pill">Rapide</span></div>
+            <div class="m-desc">Essaie LTX-Video puis bascule automatiquement sur le GPU Dédié</div>
+          </button>
+
+          <button type="button" class="model-btn" onclick="selectT2VModel('wan_auto', this)">
+            <div class="m-name">🚀 Wan 2.2 + Secours <span class="tag-pill">Réaliste</span></div>
+            <div class="m-desc">Image IA + Animation Wan 2.2 ou basculement GPU Dédié Sans Quota</div>
+          </button>
+        </div>
+
+        <label for="t2vPrompt">Votre Prompt (écrivez en français ou en anglais)</label>
+        <textarea id="t2vPrompt" placeholder="Ex: Un lion majestueux marche dans la savane africaine au lever du soleil, lumière dorée cinématique, mouvement fluide et ultra réaliste 4K"></textarea>
+
+        <div class="prompt-actions">
+          <button type="button" class="chip-btn magic" onclick="enhancePrompt()">
+            ✨ Enrichir en Prompt Cinéma Photoréaliste
+          </button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(0)">🦁 Lion Savane 4K</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(1)">🌊 Drone Océan</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(2)">🌃 Cyberpunk Nuit</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(3)">🐉 Dragon & Volcan</button>
+        </div>
+
+        <div class="row-3">
+          <div>
+            <label for="t2vSpeed">Qualité / Vitesse GPU</label>
+            <select id="t2vSpeed">
+              <option value="fast" selected>⚡ Rapide (~25 à 35 sec)</option>
+              <option value="high">🎬 Haute Définition (~45 à 65 sec)</option>
+            </select>
+          </div>
+          <div>
+            <label for="t2vAspect">Format Vidéo</label>
+            <select id="t2vAspect">
+              <option value="16:9" selected>16:9 (Paysage YouTube / Cinéma)</option>
+              <option value="9:16">9:16 (Vertical TikTok / Reels)</option>
+              <option value="1:1">1:1 (Carré)</option>
+            </select>
+          </div>
+          <div>
+            <label for="t2vStyle">Style Cinématique</label>
+            <select id="t2vStyle">
+              <option value="photorealistic 4k cinema movie shot, ultra detailed, natural fluid motion, volumetric lighting, masterpiece" selected>🎬 Photoréaliste 4K</option>
+              <option value="aerial fpv drone shot, smooth gliding camera movement, breathtaking nature, 60fps">🚁 Vue Drone Aérien</option>
+              <option value="japanese anime film style, Makoto Shinkai lighting, vibrant colors, fluid sakuga">🌸 Anime Japonais HD</option>
+              <option value="3d pixar animation style, soft global illumination, expressive characters">🧸 Animation 3D</option>
+              <option value="cyberpunk neon rain night scene, anamorphic lens flare, realistic reflections">🤖 Cyberpunk Sci-Fi</option>
+            </select>
+          </div>
+        </div>
+
+        <button id="t2vBtn" type="button" class="btn-primary" onclick="generateTextToVideo()">
+          <span>🎬 Générer la Vidéo Réaliste (Sans Quota)</span>
+        </button>
+
+        <div id="t2vStatus" class="status-box"></div>
+
+        <div id="t2vOutput" class="video-output">
+          <video id="t2vVideo" controls playsinline loop></video>
+          <div id="scenePlaylistInfo" style="display:none; font-size:12px; color:var(--accent); margin-top:6px; text-align:center;"></div>
+          <div class="row-2" style="margin-top:8px;">
+            <a id="t2vDownload" href="#" download="video-ia-realiste.mp4" target="_blank" class="btn-secondary" style="margin-top:0;">
+              📥 Télécharger la vidéo (.mp4)
+            </a>
+            <button type="button" class="btn-secondary" style="margin-top:0;" onclick="extendWithSecondScene()">
+              ➕ Générer Plan 2 (Film 10s)
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONGLET 2 : IMAGE VERS VIDEO (SANS QUOTA ZEROGPU) -->
+    <section id="tab-i2v" class="tab-section">
+      <div class="card">
+        <div class="card-title">
+          <span>🖼️ Animer une Image en Vidéo Réaliste</span>
+          <span class="tag-pill">Sans Quota ZeroGPU</span>
+        </div>
+        <p class="card-sub">
+          Importez une photo de votre téléphone (ou générez une image IA réaliste en 1 clic), puis animez-la sur le cluster GPU Dédié !
+        </p>
+
+        <div class="upload-zone" onclick="document.getElementById('i2vFileInput').click()">
+          <input type="file" id="i2vFileInput" accept="image/*" style="display:none" onchange="previewUploadedImage(event)" />
+          <div id="uploadPromptText">
+            📷 <strong>Appuyez ici pour choisir une photo sur votre téléphone</strong><br />
+            <span style="font-size:11.5px; color:var(--muted);">JPG, PNG, WEBP supportés</span>
+          </div>
+          <img id="i2vPreviewImg" alt="Aperçu" />
+        </div>
+
+        <label for="i2vPrompt">Décrivez l'animation souhaitée (en français ou en anglais)</label>
+        <textarea id="i2vPrompt" placeholder="Ex: La caméra avance doucement, le sujet bouge naturellement avec le vent, lumière dorée cinématique réaliste"></textarea>
+
+        <div class="prompt-actions">
+          <button type="button" class="chip-btn magic" onclick="generateStarterImageEAS()">
+            🎨 Pas de photo ? Générer une Image IA Réaliste depuis ce prompt (15s)
+          </button>
+        </div>
+
+        <button id="i2vBtn" type="button" class="btn-primary" onclick="generateImageToVideo()">
+          <span>✨ Animer l'Image en Vidéo (.mp4)</span>
+        </button>
+
+        <div id="i2vStatus" class="status-box"></div>
+
+        <div id="i2vOutput" class="video-output">
+          <video id="i2vVideo" controls playsinline loop></video>
+          <a id="i2vDownload" href="#" download="animation-ia.mp4" target="_blank" class="btn-secondary">
+            📥 Télécharger la vidéo (.mp4)
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONGLET 3 : STUDIO GPU EN DIRECT -->
+    <section id="tab-studio" class="tab-section">
+      <div class="card">
+        <div class="card-title">
+          <span>⚡ Serveurs Vidéo IA Intégrés</span>
+          <span class="tag-pill">Direct</span>
+        </div>
+        <p class="card-sub">
+          Le premier serveur ci-dessous (<strong>Alibaba PAI EasyAnimate 12B</strong>) tourne sur un GPU dédié sans quota ZeroGPU :
+        </p>
+
+        <div class="prompt-actions" style="margin-bottom:12px;">
+          <button type="button" class="chip-btn magic" onclick="switchSpace('https://alibaba-pai-easyanimate.hf.space', 'Alibaba PAI EasyAnimate 12B (GPU Dédié Sans Quota)')">
+            🔥 EasyAnimate 12B (Sans Quota)
+          </button>
+          <button type="button" class="chip-btn" onclick="switchSpace('https://zerogpu-aoti-wan2-2-fp8da-aoti-faster.hf.space', 'Wan 2.2 FP8 Faster')">
+            🎬 Wan 2.2 Faster
+          </button>
+          <button type="button" class="chip-btn" onclick="switchSpace('https://lightricks-ltx-video-distilled.hf.space', 'Lightricks LTX-Video')">
+            ⚡ LTX-Video
+          </button>
+          <button type="button" class="chip-btn" onclick="switchSpace('https://lightricks-ltx-2-5.hf.space', 'Lightricks LTX-2.5 HD')">
+            🚀 LTX-2.5 HD
+          </button>
+          <button type="button" class="chip-btn" onclick="switchSpace('https://bytedance-animatediff-lightning.hf.space', 'ByteDance epiCRealism Lightning')">
+            🎥 epiCRealism Lightning
+          </button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span id="currentSpaceTitle" style="font-size:12.5px; font-weight:700; color:var(--accent);">
+            Serveur actif : Alibaba PAI EasyAnimate 12B (GPU Dédié Sans Quota)
+          </span>
+          <a id="openExternalSpace" href="https://alibaba-pai-easyanimate.hf.space" target="_blank" style="font-size:12px; color:#d2c2ff; text-decoration:underline;">
+            Ouvrir en plein écran ↗
+          </a>
+        </div>
+
+        <div class="iframe-wrap">
+          <iframe id="spaceIframe" src="https://alibaba-pai-easyanimate.hf.space" allow="accelerometer; ambient-light-sensor; autoplay; battery; camera; clipboard-write; encrypted-media; fullscreen; geolocation; gyroscope; layout-animations; legacy-image-formats; magnetometer; microphone; midi; oversized-images; payment; picture-in-picture; publickey-credentials-get; sync-xhr; usb; vr; wake-lock; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts allow-downloads"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONGLET 4 : GALERIE LOCALE -->
+    <section id="tab-gallery" class="tab-section">
+      <div class="card">
+        <div class="card-title">
+          <span>🎞️ Ma Galerie Vidéo</span>
+          <button type="button" class="chip-btn" onclick="clearGallery()">🗑️ Vider</button>
+        </div>
+        <p class="card-sub">
+          Retrouvez toutes les vidéos réalistes que vous avez générées sur votre téléphone :
+        </p>
+        <div id="galleryList" class="gallery-grid"></div>
+      </div>
+    </section>
+
+    <!-- ONGLET 5 : CLÉ GPU OPTIONNELLE -->
+    <section id="tab-settings" class="tab-section">
+      <div class="card">
+        <div class="card-title">
+          <span>⚙️ Paramètres & Clé Hugging Face (Optionnel)</span>
+          <span class="tag-pill">Bonus</span>
+        </div>
+        <p class="card-sub">
+          Le moteur par défaut (<strong>GPU Dédié Alibaba PAI 12B</strong>) fonctionne <strong>sans aucune clé et sans limite ZeroGPU</strong>. Si vous souhaitez en plus débloquer les serveurs ZeroGPU (Wan 2.2 / LTX-2.5), vous pouvez coller un token gratuit ici :
+        </p>
+        <label for="savedHfToken">Token Hugging Face (`hf_...`)</label>
+        <input type="password" id="savedHfToken" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+        <div class="row-2" style="margin-top:10px;">
+          <button type="button" class="btn-primary" onclick="saveHfToken()">
+            💾 Sauvegarder
+          </button>
+          <a href="https://huggingface.co/settings/tokens" target="_blank" class="btn-secondary" style="margin-top:0;">
+            🔗 Obtenir un Token ↗
+          </a>
+        </div>
+        <p id="tokenSavedMsg" style="font-size:12px; color:var(--accent); margin-top:8px; display:none;">
+          ✅ Token sauvegardé dans votre navigateur !
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- BARRE DE NAVIGATION MOBILE -->
+  <nav class="bottom-nav">
+    <button type="button" class="nav-item active" onclick="switchTab('tab-t2v', this)">
+      <span class="nav-icon">🎬</span>
+      <span>Texte→Vidéo</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('tab-i2v', this)">
+      <span class="nav-icon">🖼️</span>
+      <span>Image→Vidéo</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('tab-studio', this)">
+      <span class="nav-icon">⚡</span>
+      <span>Serveurs</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('tab-gallery', this)">
+      <span class="nav-icon">🎞️</span>
+      <span>Galerie</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('tab-settings', this)">
+      <span class="nav-icon">⚙️</span>
+      <span>Options</span>
+    </button>
+  </nav>
+
+  <script type="module">
+    import { Client } from "https://cdn.jsdelivr.net/npm/@gradio/client/+esm";
+
+    const EAS_HOST = "https://alibaba-pai-easyanimate.hf.space";
+    let currentT2VModel = "alibaba_eas";
+    let uploadedImageBlob = null;
+    let uploadedServerPath = null;
+    let currentPlaylistUrls = [];
+    let currentPlaylistIndex = 0;
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const savedToken = localStorage.getItem("hf_video_token") || "";
+      if (savedToken) {
+        document.getElementById("savedHfToken").value = savedToken;
+      }
+      renderGallery();
+
+      // Enchaînement automatique si mode Film 10s (2 scènes)
+      const videoEl = document.getElementById("t2vVideo");
+      videoEl.addEventListener("ended", () => {
+        if (currentPlaylistUrls.length > 1) {
+          currentPlaylistIndex = (currentPlaylistIndex + 1) % currentPlaylistUrls.length;
+          videoEl.src = currentPlaylistUrls[currentPlaylistIndex];
+          videoEl.play().catch(() => {});
+          const info = document.getElementById("scenePlaylistInfo");
+          info.style.display = "block";
+          info.textContent = `🎞️ Lecture continue Film 10s : Plan ${currentPlaylistIndex + 1} / ${currentPlaylistUrls.length}`;
+        }
+      });
+    });
+
+    window.switchTab = function(tabId, btn) {
+      document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
+      document.getElementById(tabId).classList.add("active");
+      document.querySelectorAll(".nav-item").forEach(b => b.classList.remove("active"));
+      if (btn) btn.classList.add("active");
+    };
+
+    window.selectT2VModel = function(modelKey, btn) {
+      currentT2VModel = modelKey;
+      document.querySelectorAll("#t2vModelGrid .model-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    };
+
+    window.switchSpace = function(url, title) {
+      document.getElementById("spaceIframe").src = url;
+      document.getElementById("currentSpaceTitle").textContent = "Serveur actif : " + title;
+      document.getElementById("openExternalSpace").href = url;
+    };
+
+    window.saveHfToken = function() {
+      const val = document.getElementById("savedHfToken").value.trim();
+      localStorage.setItem("hf_video_token", val);
+      const msg = document.getElementById("tokenSavedMsg");
+      msg.style.display = "block";
+      setTimeout(() => { msg.style.display = "none"; }, 3500);
+    };
+
+    function getClientOptions() {
+      const token = (localStorage.getItem("hf_video_token") || document.getElementById("savedHfToken")?.value || "").trim();
+      return token ? { hf_token: token } : {};
+    }
+
+    const SAMPLE_PROMPTS = [
+      "Un lion majestueux marche dans la savane africaine dorée au lever du soleil, poussière lumineuse dans l'air, qualité documentaire National Geographic 4K",
+      "Vue drone aérienne survolant des vagues turquoise transparentes vers une île volcanique tropicale au coucher du soleil, mouvement fluide 60fps",
+      "Une rue cyberpunk illuminée de néons sous la pluie à Tokyo la nuit, reflets réalistes sur le sol mouillé, voiture futuriste qui avance lentement",
+      "Un grand dragon crachant des braises dorées survole une forteresse médiévale au sommet des montagnes enneigées, plan cinéma épique IMAX"
+    ];
+
+    window.loadSamplePrompt = function(index) {
+      document.getElementById("t2vPrompt").value = SAMPLE_PROMPTS[index];
+    };
+
+    window.enhancePrompt = function() {
+      const el = document.getElementById("t2vPrompt");
+      const style = document.getElementById("t2vStyle").value;
+      let raw = el.value.trim() || "Un paysage cinématique spectaculaire au lever du soleil";
+      if (!raw.includes("masterpiece")) {
+        el.value = `${raw}, ${style}`;
+      }
+    };
+
+    function setBoxStatus(boxId, html, isError = false) {
+      const box = document.getElementById(boxId);
+      box.classList.add("show");
+      box.style.borderColor = isError ? "var(--danger)" : "var(--card-border)";
+      box.innerHTML = html;
+    }
+
+    // Traduction automatique FR -> EN gratuite pour maximiser le réalisme du modèle 12B
+    async function translateToEnglishIfNeeded(text) {
+      try {
+        const res = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 450))}&langpair=fr|en`);
+        const data = await res.json();
+        const translated = data?.responseData?.translatedText;
+        if (translated && !translated.includes("MYMEMORY WARNING")) {
+          return translated;
+        }
+      } catch (e) {}
+      return text;
+    }
+
+    // Appel direct au cluster GPU dédié Alibaba Cloud EAS (Zéro Quota ZeroGPU !)
+    async function runAlibabaDedicatedGPU({
+      prompt,
+      aspect = "16:9",
+      speed = "fast",
+      isImage = false,
+      startImageObj = null,
+      statusBoxId = "t2vStatus",
+      labelPrefix = "GPU Dédié Alibaba PAI 12B"
+    }) {
+      let width = 512;
+      let height = 320;
+      if (aspect === "9:16") {
+        width = 320;
+        height = 512;
+      } else if (aspect === "1:1") {
+        width = 448;
+        height = 448;
+      } else if (speed === "high") {
+        width = 672;
+        height = 384;
+      }
+
+      const steps = speed === "high" ? 18 : 11;
+      const frames = isImage ? 1 : (speed === "high" ? 21 : 17);
+      const genMethod = isImage ? "Image Generation" : "Video Generation";
+      const seed = String(Math.floor(Math.random() * 99999999));
+      const sessionHash = Math.random().toString(36).substring(2, 12);
+
+      const payload = {
+        data: [
+          "models/Diffusion_Transformer/EasyAnimateV5.1-12b-zh-InP",
+          "none",
+          "none",
+          "none",
+          0.55,
+          `${prompt}. High quality, masterpiece, best quality, high resolution, ultra-detailed, photorealistic cinema.`,
+          "Twisted body, limb deformities, text captions, comic, static, ugly, error, messy code, watermark, blurry, low quality.",
+          "Flow",
+          steps,
+          "Generate by",
+          width,
+          height,
+          512,
+          genMethod,
+          frames,
+          6.0,
+          startImageObj,
+          null,
+          null,
+          null,
+          0.7,
+          seed
+        ],
+        fn_index: 5,
+        session_hash: sessionHash
+      };
+
+      setBoxStatus(
+        statusBoxId,
+        `<span class="spinner"></span> <strong>Connexion au ${labelPrefix} (Sans Quota ZeroGPU)...</strong>` +
+        `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:15%"></div></div>`
+      );
+
+      const joinResp = await fetch(`${EAS_HOST}/queue/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (!joinResp.ok) {
+        throw new Error(`Erreur de connexion au serveur GPU (${joinResp.status})`);
+      }
+
+      return await new Promise((resolve, reject) => {
+        const es = new EventSource(`${EAS_HOST}/queue/data?session_hash=${sessionHash}`);
+        let progressPct = 22;
+        const timer = setInterval(() => {
+          progressPct = Math.min(92, progressPct + 4);
+          const bar = document.getElementById(`${statusBoxId}_bar`);
+          if (bar) bar.style.width = `${progressPct}%`;
+        }, 2000);
+
+        const timeoutId = setTimeout(() => {
+          clearInterval(timer);
+          es.close();
+          reject(new Error("Délai d'attente dépassé sur le serveur GPU."));
+        }, 180000);
+
+        es.onmessage = (event) => {
+          try {
+            const msg = JSON.parse(event.data);
+            if (msg.msg === "estimation") {
+              setBoxStatus(
+                statusBoxId,
+                `<span class="spinner"></span> <strong>${labelPrefix} : File d'attente #${(msg.rank || 0) + 1}</strong><br>` +
+                `<small style="color:var(--muted)">Aucun quota ZeroGPU requis • Préparation du GPU dédié...</small>` +
+                `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:${progressPct}%"></div></div>`
+              );
+            } else if (msg.msg === "process_starts") {
+              setBoxStatus(
+                statusBoxId,
+                `<span class="spinner"></span> <strong>⚡ ${labelPrefix} : Rendu IA réaliste en cours...</strong><br>` +
+                `<small style="color:var(--muted)">Calcul sur carte graphique dédiée (~25 à 45 secondes)...</small>` +
+                `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:${Math.max(progressPct, 40)}%"></div></div>`
+              );
+            } else if (msg.msg === "process_completed") {
+              clearInterval(timer);
+              clearTimeout(timeoutId);
+              es.close();
+
+              const outData = msg?.output?.data || [];
+              // Cas Image Generation (outData[0])
+              if (isImage && outData[0]?.value) {
+                const imgVal = outData[0].value;
+                const imgUrl = imgVal.url || `${EAS_HOST}/file=${imgVal.path}`;
+                resolve({ url: imgUrl, path: imgVal.path });
+                return;
+              }
+              // Cas Video Generation (outData[1])
+              const vidVal = outData[1]?.value?.video || outData[1]?.video || outData[1]?.value;
+              if (vidVal && (vidVal.url || vidVal.path)) {
+                const videoUrl = vidVal.url || `${EAS_HOST}/file=${vidVal.path}`;
+                resolve({ url: videoUrl, path: vidVal.path });
+                return;
+              }
+              reject(new Error(outData[2] || "Réponse GPU reçue sans fichier vidéo."));
+            }
+          } catch (err) {}
+        };
+
+        es.onerror = () => {
+          clearInterval(timer);
+          clearTimeout(timeoutId);
+          es.close();
+          reject(new Error("Connexion interrompue avec le flux GPU."));
+        };
+      });
+    }
+
+    window.generateTextToVideo = async function() {
+      const rawPrompt = document.getElementById("t2vPrompt").value.trim();
+      const style = document.getElementById("t2vStyle").value;
+      const speed = document.getElementById("t2vSpeed").value;
+      const aspect = document.getElementById("t2vAspect").value;
+      const btn = document.getElementById("t2vBtn");
+      const outBox = document.getElementById("t2vOutput");
+      const playlistInfo = document.getElementById("scenePlaylistInfo");
+
+      if (!rawPrompt) {
+        setBoxStatus("t2vStatus", "⚠️ Veuillez décrire votre vidéo dans le champ Prompt.", true);
+        return;
+      }
+
+      btn.disabled = true;
+      outBox.classList.remove("show");
+      playlistInfo.style.display = "none";
+      currentPlaylistUrls = [];
+      currentPlaylistIndex = 0;
+
+      try {
+        setBoxStatus("t2vStatus", `<span class="spinner"></span> Optimisation et traduction cinématique de votre prompt...`);
+        const promptEn = await translateToEnglishIfNeeded(rawPrompt);
+        const fullPrompt = `${promptEn}, ${style}`;
+
+        // Si l'utilisateur a choisi LTX-Video en premier, on tente LTX puis bascule automatiquement sur Alibaba GPU Dédié si ZeroGPU bloque !
+        if (currentT2VModel === "ltx_auto") {
+          try {
+            setBoxStatus("t2vStatus", `<span class="spinner"></span> Tentative rapide sur Lightricks LTX-Video...`);
+            const client = await Client.connect("Lightricks/ltx-video-distilled", getClientOptions());
+            const isVert = aspect === "9:16";
+            const r = await client.predict("/text_to_video", {
+              prompt: fullPrompt,
+              negative_prompt: "worst quality, blurry, jittery, distorted",
+              input_image_filepath: null,
+              input_video_filepath: null,
+              height_ui: isVert ? 704 : 512,
+              width_ui: isVert ? 512 : 704,
+              mode: "text-to-video",
+              duration_ui: 3.5,
+              ui_frames_to_use: 9,
+              seed_ui: 42,
+              randomize_seed: true,
+              ui_guidance_scale: 1,
+              improve_texture_flag: true
+            });
+            const str = JSON.stringify(r.data);
+            const match = str.match(/https?:\/\/[^"'\s]+\.mp4[^"'\s]*/i);
+            if (match) {
+              showGeneratedVideo([match[0]], rawPrompt, "Lightricks LTX-Video");
+              btn.disabled = false;
+              return;
+            }
+          } catch (ltxErr) {
+            console.warn("LTX ZeroGPU indisponible, basculement immédiat sur GPU Dédié Sans Quota :", ltxErr);
+          }
+        }
+
+        // Moteur Principal SANS QUOTA ZEROGPU : Alibaba PAI Dedicated GPU 12B
+        const clip1 = await runAlibabaDedicatedGPU({
+          prompt: `${fullPrompt}, cinematic establishing shot, smooth camera movement`,
+          aspect,
+          speed,
+          isImage: false,
+          statusBoxId: "t2vStatus",
+          labelPrefix: currentT2VModel === "alibaba_10s" ? "Plan 1/2 • GPU Dédié 12B" : "GPU Dédié Alibaba PAI 12B"
+        });
+
+        // Affiche immédiatement le Plan 1 pour que l'utilisateur voie sa vidéo tout de suite !
+        showGeneratedVideo([clip1.url], rawPrompt, "Alibaba PAI 12B (Sans Quota)");
+
+        // Si le mode Film 10s (2 Plans) est sélectionné, génère aussi le Plan 2 et les enchaîne
+        if (currentT2VModel === "alibaba_10s") {
+          setBoxStatus(
+            "t2vStatus",
+            `✅ <strong>Plan 1 prêt et en lecture !</strong><br><span class="spinner"></span> Génération automatique du <strong>Plan 2/2 (5s → 10s)</strong> sur le GPU Dédié...`
+          );
+          const clip2 = await runAlibabaDedicatedGPU({
+            prompt: `${fullPrompt}, dynamic close-up continuation shot, dramatic climax motion`,
+            aspect,
+            speed,
+            isImage: false,
+            statusBoxId: "t2vStatus",
+            labelPrefix: "Plan 2/2 • GPU Dédié 12B"
+          });
+          showGeneratedVideo([clip1.url, clip2.url], rawPrompt, "Film 10s Multi-Plans (Alibaba PAI 12B)");
+        }
+      } catch (err) {
+        console.error(err);
+        setBoxStatus(
+          "t2vStatus",
+          `⚠️ <strong>Le serveur est momentanément occupé :</strong> ${err.message || err}<br>` +
+          `Appuyez à nouveau sur <strong>Générer la Vidéo</strong> dans quelques secondes.`,
+          true
+        );
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    function showGeneratedVideo(urls, promptText, engineName) {
+      currentPlaylistUrls = urls;
+      currentPlaylistIndex = 0;
+      const videoEl = document.getElementById("t2vVideo");
+      const dlEl = document.getElementById("t2vDownload");
+      const outBox = document.getElementById("t2vOutput");
+      const playlistInfo = document.getElementById("scenePlaylistInfo");
+
+      videoEl.loop = urls.length === 1;
+      videoEl.src = urls[0];
+      dlEl.href = urls[0];
+      outBox.classList.add("show");
+      videoEl.play().catch(() => {});
+
+      if (urls.length > 1) {
+        playlistInfo.style.display = "block";
+        playlistInfo.textContent = `🎞️ Film 10s Actif (${urls.length} plans enchaînés automatiquement) — Lecture du Plan 1/${urls.length}`;
+        setBoxStatus("t2vStatus", `✅ <strong>Film 10s (2 plans) généré avec succès sans quota !</strong>`);
+      } else {
+        setBoxStatus("t2vStatus", `✅ <strong>Vidéo IA réaliste générée avec succès (Sans Quota ZeroGPU) !</strong>`);
+      }
+
+      saveToGallery({
+        url: urls[urls.length - 1],
+        prompt: promptText,
+        engine: engineName,
+        date: new Date().toLocaleString("fr-FR")
+      });
+    }
+
+    // Bouton pour prolonger n'importe quelle vidéo avec un 2ème plan (Film 10s)
+    window.extendWithSecondScene = async function() {
+      const rawPrompt = document.getElementById("t2vPrompt").value.trim() || "Cinematic continuation shot";
+      const style = document.getElementById("t2vStyle").value;
+      const speed = document.getElementById("t2vSpeed").value;
+      const aspect = document.getElementById("t2vAspect").value;
+      try {
+        const promptEn = await translateToEnglishIfNeeded(rawPrompt);
+        const clip2 = await runAlibabaDedicatedGPU({
+          prompt: `${promptEn}, ${style}, second scene continuation shot, dynamic camera zoom`,
+          aspect,
+          speed,
+          isImage: false,
+          statusBoxId: "t2vStatus",
+          labelPrefix: "Extension Plan 2 (10s) • GPU Dédié"
+        });
+        const updated = [...currentPlaylistUrls, clip2.url];
+        showGeneratedVideo(updated, rawPrompt, "Film 10s Multi-Plans (Alibaba PAI 12B)");
+      } catch (e) {
+        setBoxStatus("t2vStatus", `⚠️ Impossible de générer le Plan 2 : ${e.message}`, true);
+      }
+    };
+
+    // ==================== ONGLET 2 : IMAGE VERS VIDEO (SANS QUOTA) ====================
+    window.previewUploadedImage = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      uploadedImageBlob = file;
+      uploadedServerPath = null;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.getElementById("i2vPreviewImg");
+        img.src = e.target.result;
+        img.style.display = "block";
+        document.getElementById("uploadPromptText").innerHTML = `✅ <strong>${file.name}</strong> prête à être animée`;
+      };
+      reader.readAsDataURL(file);
+    };
+
+    // Génère une image IA réaliste sur le GPU Dédié Alibaba PAI (Zéro Quota, pas d'erreur 402 !)
+    window.generateStarterImageEAS = async function() {
+      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Un lion majestueux dans la savane au lever du soleil, cinéma 4k";
+      try {
+        const promptEn = await translateToEnglishIfNeeded(rawPrompt);
+        const res = await runAlibabaDedicatedGPU({
+          prompt: `${promptEn}, photorealistic 4k movie frame, ultra detailed`,
+          aspect: "16:9",
+          speed: "fast",
+          isImage: true,
+          statusBoxId: "i2vStatus",
+          labelPrefix: "Génération Image IA • GPU Dédié"
+        });
+        uploadedServerPath = res.path;
+        uploadedImageBlob = null;
+        const preview = document.getElementById("i2vPreviewImg");
+        preview.src = res.url;
+        preview.style.display = "block";
+        document.getElementById("uploadPromptText").innerHTML = `✅ <strong>Image IA réaliste générée !</strong> Appuyez maintenant sur "Animer l'Image en Vidéo".`;
+        setBoxStatus("i2vStatus", `✅ <strong>Image de départ prête !</strong> Appuyez sur le bouton ci-dessus pour l'animer en vidéo.`);
+      } catch (e) {
+        setBoxStatus("i2vStatus", `⚠️ Erreur lors de la génération de l'image : ${e.message}`, true);
+      }
+    };
+
+    window.generateImageToVideo = async function() {
+      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Cinematic smooth motion, realistic camera movement";
+      const btn = document.getElementById("i2vBtn");
+      const outBox = document.getElementById("i2vOutput");
+
+      if (!uploadedImageBlob && !uploadedServerPath) {
+        setBoxStatus("i2vStatus", "⚠️ Choisissez d'abord une photo sur votre téléphone ou appuyez sur 'Générer une Image IA Réaliste'.", true);
+        return;
+      }
+
+      btn.disabled = true;
+      outBox.classList.remove("show");
+
+      try {
+        const promptEn = await translateToEnglishIfNeeded(rawPrompt);
+        let serverPath = uploadedServerPath;
+
+        if (!serverPath && uploadedImageBlob) {
+          setBoxStatus("i2vStatus", `<span class="spinner"></span> Envoi de votre image vers le serveur GPU Dédié...`);
+          const form = new FormData();
+          form.append("files", uploadedImageBlob, uploadedImageBlob.name || "frame.jpg");
+          const upResp = await fetch(`${EAS_HOST}/upload`, {
+            method: "POST",
+            body: form
+          });
+          const upJson = await upResp.json();
+          serverPath = upJson[0];
+        }
+
+        const startImageObj = {
+          path: serverPath,
+          meta: { _type: "gradio.FileData" }
+        };
+
+        const videoRes = await runAlibabaDedicatedGPU({
+          prompt: `${promptEn}, smooth natural movement, high quality 4k`,
+          aspect: "16:9",
+          speed: "fast",
+          isImage: false,
+          startImageObj,
+          statusBoxId: "i2vStatus",
+          labelPrefix: "Animation Image→Vidéo • GPU Dédié"
+        });
+
+        setBoxStatus("i2vStatus", `✅ <strong>Image animée en vidéo avec succès (Sans Quota ZeroGPU) !</strong>`);
+        const v = document.getElementById("i2vVideo");
+        const dl = document.getElementById("i2vDownload");
+        v.src = videoRes.url;
+        dl.href = videoRes.url;
+        outBox.classList.add("show");
+        v.play().catch(() => {});
+
+        saveToGallery({
+          url: videoRes.url,
+          prompt: "[Image→Vidéo] " + rawPrompt,
+          engine: "Alibaba PAI 12B I2V (Sans Quota)",
+          date: new Date().toLocaleString("fr-FR")
+        });
+      } catch (err) {
+        setBoxStatus("i2vStatus", `⚠️ Erreur lors de l'animation : ${err.message}`, true);
+      } finally {
+        btn.disabled = false;
+      }
+    };
+
+    // ==================== GALERIE LOCALE ====================
+    function saveToGallery(entry) {
+      try {
+        const list = JSON.parse(localStorage.getItem("ai_video_gallery") || "[]");
+        list.unshift(entry);
+        localStorage.setItem("ai_video_gallery", JSON.stringify(list.slice(0, 20)));
+        renderGallery();
+      } catch (e) {}
+    }
+
+    window.renderGallery = function() {
+      const container = document.getElementById("galleryList");
+      const list = JSON.parse(localStorage.getItem("ai_video_gallery") || "[]");
+      if (!list.length) {
+        container.innerHTML = `<p style="font-size:13px; color:var(--muted); text-align:center; padding:24px 0;">Aucune vidéo enregistrée pour l'instant.</p>`;
+        return;
+      }
+      container.innerHTML = list.map((item, idx) => `
+        <div class="gallery-item">
+          <video src="${item.url}" controls playsinline loop></video>
+          <div class="gallery-meta">
+            <strong>${item.engine}</strong> • ${item.date}<br/>
+            <span>"${item.prompt}"</span>
+          </div>
+          <a href="${item.url}" download="video-ia-${idx + 1}.mp4" target="_blank" class="btn-secondary">📥 Télécharger (.mp4)</a>
+        </div>
+      `).join("");
+    };
+
+    window.clearGallery = function() {
+      localStorage.removeItem("ai_video_gallery");
+      renderGallery();
+    };
+  </script>
+</body>
+</html>

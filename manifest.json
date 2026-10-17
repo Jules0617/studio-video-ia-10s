@@ -1,0 +1,17 @@
+{
+  "name": "Studio Vidéo IA 10s — Générateur Gratuit & Illimité",
+  "short_name": "Vidéo IA 10s",
+  "description": "Générateur de vidéos IA de 5s à 20s par prompt texte et image (Wan 2.2, LTX-2, CogVideoX, Omni-Video, HunyuanVideo).",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#090b10",
+  "theme_color": "#7c5cff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%237c5cff'/><polygon points='38,28 38,72 74,50' fill='%2300e5a3'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    }
+  ]
+}
