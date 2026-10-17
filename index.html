@@ -1237,16 +1237,16 @@
     }) {
       const isImage = mode === "image";
       const promptEn = await translateToEnglishClient(prompt);
-      const fullPromptEn = `${promptEn}. Continuous smooth progressive action from start to finish, dynamic camera tracking, ${style}.`;
+      const fullPromptEn = `Close up dynamic tracking shot: ${promptEn}. Fast continuous progressive action and camera movement from start to finish, ${style}.`;
 
-      let width = 384;
-      let height = 224;
+      let width = 512;
+      let height = 288;
       if (aspect === "9:16") {
-        width = 224;
-        height = 384;
+        width = 288;
+        height = 512;
       } else if (aspect === "1:1") {
-        width = 320;
-        height = 320;
+        width = 384;
+        height = 384;
       }
       const steps = 10;
       const frames = isImage ? 1 : 81;
@@ -1266,13 +1266,13 @@
           "none",
           0.55,
           fullPromptEn,
-          "static, frozen, repetitive loop, jittery, ugly, deformed, blurry, watermark, text, low quality.",
+          "static, frozen, repetitive loop, distant tiny subject, jittery, ugly, deformed, blurry, watermark, text, low quality.",
           "Flow",
           steps,
           "Generate by",
           width,
           height,
-          Math.max(width, height),
+          512,
           genMethod,
           frames,
           6.0,

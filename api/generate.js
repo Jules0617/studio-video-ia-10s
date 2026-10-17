@@ -80,24 +80,22 @@ async function runContinuous81FramesAlibaba({
   attemptIndex = 0,
   onEvent = () => {}
 }) {
-  // Résolution optimisée pour générer 81 frames continues (10.125s natifs à 8fps, zéro boucle)
-  let width = 384;
-  let height = 224;
+  // Résolution native 512 d'EasyAnimateV5.1-12b pour un mouvement ample, dynamique et continu sur 81 frames (10.0s)
+  let width = 512;
+  let height = 288;
 
   if (aspect === "9:16") {
-    width = speed === "high" && attemptIndex === 0 ? 288 : 224;
-    height = speed === "high" && attemptIndex === 0 ? 512 : 384;
+    width = 288;
+    height = 512;
   } else if (aspect === "1:1") {
-    width = speed === "high" && attemptIndex === 0 ? 384 : 320;
-    height = speed === "high" && attemptIndex === 0 ? 384 : 320;
+    width = 384;
+    height = 384;
+  } else if (speed === "high" && attemptIndex === 0) {
+    width = 672;
+    height = 384;
   } else {
-    width = speed === "high" && attemptIndex === 0 ? 512 : 384;
-    height = speed === "high" && attemptIndex === 0 ? 288 : 224;
-  }
-
-  if (isImage) {
-    width = aspect === "9:16" ? 384 : 512;
-    height = aspect === "9:16" ? 512 : 288;
+    width = 512;
+    height = 288;
   }
 
   const steps = speed === "high" && attemptIndex === 0 ? 12 : 10;
@@ -123,13 +121,13 @@ async function runContinuous81FramesAlibaba({
       "none",
       0.55,
       promptEn,
-      "static, frozen, repetitive loop, jittery, ugly, deformed, blurry, watermark, text, low quality.",
+      "static, frozen, repetitive loop, distant tiny subject, jittery, ugly, deformed, blurry, watermark, text, low quality.",
       "Flow",
       steps,
       "Generate by",
       width,
       height,
-      Math.max(width, height),
+      512,
       genMethod,
       frames,
       6.0,
@@ -336,8 +334,8 @@ export default async function handler(req) {
         });
 
         const translatedPrompt = await translateToEnglishServer(rawPrompt);
-        // Met le prompt de l'utilisateur en priorité absolue + mouvement continu sur 10 secondes
-        const fullPromptEn = `${translatedPrompt}. Continuous smooth progressive action from start to finish, dynamic camera tracking, ${style}.`;
+        // Met le prompt de l'utilisateur en priorité absolue + cadrage rapproché dynamique et mouvement continu sur 81 frames (10s)
+        const fullPromptEn = `Close up dynamic tracking shot: ${translatedPrompt}. Fast continuous progressive action and camera movement from start to finish, ${style}.`;
 
         let startImagePath = body.startImagePath || null;
         if (!startImagePath && body.startImageBase64) {
