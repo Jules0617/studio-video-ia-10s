@@ -10,13 +10,70 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization"
 };
 
-async function translateToEnglishServer(text) {
-  if (!text) return "A majestic cinematic scene with continuous motion in 4k";
-  const cleaned = text.trim();
+// Encyclopédie visuelle bilingue (Anglais + Chinois) pour les personnages, mangas, animes et sujets célèbres
+const CHARACTER_VISUAL_PRESETS = [
+  {
+    match: /\b(naruto|shippuden|uzumaki|rasengan|konoha)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Naruto Uzumaki from Naruto Shippuden, a young male ninja with spiky bright yellow blonde hair, wearing a black headband and an orange and black ninja jacket, running forward in a ninja battle and holding a glowing blue energy ball Rasengan in his hand, 2D anime animation, vibrant colors, dynamic continuous action",
+    zh: "火影忍者疾风传漩涡鸣人，金色刺猬头少年忍者，戴着木叶护额，穿着橙黑相间的忍者服，手中凝聚蓝色螺旋丸能量球向前奔跑战斗，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(sasuke|uchiha|sharingan|chidori)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Sasuke Uchiha from Naruto Shippuden, a young ninja with spiky black hair and glowing red Sharingan eyes, wearing dark ninja clothes, running forward with crackling blue lightning Chidori electricity in his hand, vibrant 2D anime animation, dynamic continuous action",
+    zh: "火影忍者疾风传宇智波佐助，黑色刺猬头少年忍者，红色写轮眼，手中闪烁蓝色千鸟雷电光芒向前高速奔跑战斗，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(goku|dragon\s*ball|saiyan|kamehameha|vegeta)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Son Goku Super Saiyan from Dragon Ball Z, muscular martial artist with spiky glowing golden hair and golden energy aura, wearing an orange and blue martial arts gi uniform, unleashing a glowing blue Kamehameha energy beam in battle, vibrant 2D anime animation, dynamic continuous action",
+    zh: "七龙珠Z孙悟空超级赛亚人，金色刺猬头和耀眼金色气场，身穿橙蓝武道服，双手凝聚并发射蓝色龟派气功波能量，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(luffy|one\s*piece|zoro|mugiwara)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Monkey D. Luffy from One Piece, cheerful young pirate wearing his iconic straw hat and an open red vest with blue shorts, leaping and throwing a powerful punch on the deck of a pirate ship over blue ocean waves, vibrant 2D anime animation, dynamic continuous action",
+    zh: "海贼王蒙奇·D·路飞，头戴标志性草帽，身穿红色背心和蓝色短裤的少年海盗，在海盗船甲板上跃起连续挥拳战斗，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(gojo|satoru|jujutsu|kaisen|sukuna)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Satoru Gojo from Jujutsu Kaisen, tall sorcerer with spiky white hair and glowing bright blue eyes, wearing a high-collar dark jacket, unleashing glowing red and purple cursed energy spheres in his hands, vibrant 2D anime animation, dynamic continuous action",
+    zh: "咒术回战五条悟，白色刺猬头，发光的明亮蓝色六眼，身穿深色高领咒术高专制服，双手释放耀眼的红紫咒力能量球，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(tanjiro|demon\s*slayer|kimetsu|nezuko)\b/i,
+    isAnime: true,
+    en: "Japanese 2D anime style, Tanjiro Kamado from Demon Slayer, young swordsman with burgundy hair and forehead scar, wearing a green and black checkered haori coat, swinging a katana sword surrounded by swirling water and fire flames in a dark forest, vibrant 2D anime animation, dynamic continuous action",
+    zh: "鬼灭之刃灶门炭治郎，身穿绿黑格纹羽织的少年剑士，在森林中连续挥舞缠绕烈焰与水流的日轮刀战斗，日本热血动漫风格，连续流畅动作"
+  },
+  {
+    match: /\b(spider-?man|spiderman|peter\s*parker)\b/i,
+    isAnime: false,
+    en: "Cinematic movie shot of Spider-Man wearing his iconic red and blue webbed superhero suit and mask with white eye lenses, swinging continuously on spider webs between tall glass skyscrapers in New York City at sunset, dynamic camera tracking shot",
+    zh: "漫威蜘蛛侠身穿标志性红蓝网纹战衣和面具，在夕阳下的纽约摩天大楼之间连续荡蛛丝高速飞跃，电影级特效画面，镜头高速跟随，动作连续流畅"
+  },
+  {
+    match: /\b(batman|gotham|dark\s*knight)\b/i,
+    isAnime: false,
+    en: "Cinematic movie shot of Batman in his dark armored batsuit, cowl helmet and flowing black cape, running and leaping across a rainy neon-lit rooftop in Gotham City at night with lightning in the sky, dynamic camera tracking shot",
+    zh: "蝙蝠侠身穿黑色装甲战衣、头盔和黑色披风，在雨夜霓虹闪烁的哥谭市屋顶连续奔跑跳跃，电影级画面，镜头跟随，动作连续流畅"
+  },
+  {
+    match: /\b(iron\s*man|tony\s*stark)\b/i,
+    isAnime: false,
+    en: "Cinematic movie shot of Iron Man in his sleek red and gold metallic superhero armor with glowing blue arc reactor on his chest, flying fast through the clouds with glowing repulsor jets in his hands and boots, dynamic camera tracking shot",
+    zh: "钢铁侠身穿红金金属装甲，胸口闪烁蓝色反应堆光芒，手掌和脚底喷射火焰在云层间高速连续飞行，电影级特效画面，动作连续流畅"
+  }
+];
+
+async function translatePair(text, langpair) {
+  if (!text) return "";
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3500);
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleaned.slice(0, 480))}&langpair=fr|en`;
+    const timer = setTimeout(() => controller.abort(), 3200);
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 460))}&langpair=${langpair}`;
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (res.ok) {
@@ -31,7 +88,58 @@ async function translateToEnglishServer(text) {
       }
     }
   } catch (_) {}
-  return cleaned;
+  return "";
+}
+
+async function buildBilingualVisualPrompt(rawPrompt, userStyle = "") {
+  const cleaned = (rawPrompt || "").trim();
+
+  // 1. Vérifie si le prompt mentionne un personnage / anime / univers précis
+  for (const preset of CHARACTER_VISUAL_PRESETS) {
+    if (preset.match.test(cleaned)) {
+      const extraEn = await translatePair(cleaned, "fr|en");
+      const extraZh = await translatePair(extraEn || cleaned, "en|zh-CN");
+      const fullPrompt = `${preset.en}, ${extraEn || cleaned}. ${preset.zh}，${extraZh || ""}`;
+      const negativePrompt = preset.isAnime
+        ? "photorealistic, real person, live action, static, frozen, repetitive loop, ugly, blurry, low quality"
+        : "static, frozen, repetitive loop, distant tiny subject, ugly, deformed, blurry, watermark, low quality";
+      return {
+        fullPrompt,
+        negativePrompt,
+        promptEn: `${preset.en} (${extraEn || cleaned})`,
+        isAnime: preset.isAnime
+      };
+    }
+  }
+
+  // 2. Détecte si l'utilisateur demande un anime / manga / dessin animé en général
+  const isAnimeRequest =
+    /\b(anime|manga|otaku|cartoon|dessin\s*anim[eé]|ghibli|shonen|ninja|samoura[iï])\b/i.test(
+      cleaned
+    ) || userStyle.toLowerCase().includes("anime");
+
+  // 3. Traduction bilingue Français -> Anglais ET Anglais -> Chinois (car EasyAnimateV5.1-12b-zh-InP est bilingue EN+ZH)
+  const translatedEn = (await translatePair(cleaned, "fr|en")) || cleaned;
+  const translatedZh = await translatePair(translatedEn, "en|zh-CN");
+
+  const effectiveStyle = isAnimeRequest
+    ? "Japanese 2D anime animation style, vibrant colors, fluid sakuga continuous motion, 日本二维动漫风格，色彩鲜艳，动作连续流畅"
+    : `${userStyle || "photorealistic 4k cinema movie shot, ultra detailed"}, 电影级高清真实画面，细节丰富，镜头跟随，动作大幅度连续流畅`;
+
+  const fullPrompt = `Close up dynamic tracking shot: ${translatedEn}. Continuous progressive physical action and smooth camera movement from start to finish, ${effectiveStyle}. ${
+    translatedZh ? `${translatedZh}，连续流畅动作，高清细节。` : ""
+  }`;
+
+  const negativePrompt = isAnimeRequest
+    ? "photorealistic, real human, static, frozen, repetitive loop, ugly, blurry, low quality"
+    : "static, frozen, repetitive loop, distant tiny subject, jittery, ugly, deformed, blurry, watermark, text, low quality";
+
+  return {
+    fullPrompt,
+    negativePrompt,
+    promptEn: translatedEn,
+    isAnime: isAnimeRequest
+  };
 }
 
 function base64ToUint8Array(base64Raw) {
@@ -72,7 +180,8 @@ async function uploadBase64ImageToEAS(base64DataUri) {
 }
 
 async function runContinuous81FramesAlibaba({
-  promptEn,
+  fullPrompt,
+  negativePrompt,
   aspect = "16:9",
   speed = "fast",
   isImage = false,
@@ -80,7 +189,6 @@ async function runContinuous81FramesAlibaba({
   attemptIndex = 0,
   onEvent = () => {}
 }) {
-  // Résolution native 512 d'EasyAnimateV5.1-12b pour un mouvement ample, dynamique et continu sur 81 frames (10.0s)
   let width = 512;
   let height = 288;
 
@@ -98,7 +206,7 @@ async function runContinuous81FramesAlibaba({
     height = 288;
   }
 
-  const steps = speed === "high" && attemptIndex === 0 ? 12 : 10;
+  const steps = speed === "high" && attemptIndex === 0 ? 12 : 11;
   // 81 frames = 10.125 secondes continues en une seule passe (aucune répétition de 1s !)
   const frames = isImage ? 1 : 81;
 
@@ -120,8 +228,8 @@ async function runContinuous81FramesAlibaba({
       "none",
       "none",
       0.55,
-      promptEn,
-      "static, frozen, repetitive loop, distant tiny subject, jittery, ugly, deformed, blurry, watermark, text, low quality.",
+      fullPrompt,
+      negativePrompt,
       "Flow",
       steps,
       "Generate by",
@@ -214,12 +322,12 @@ async function runContinuous81FramesAlibaba({
             type: "queue",
             rank,
             queueSize: msg.queue_size ?? 1,
-            eta: Math.round(msg.rank_eta || 45)
+            eta: Math.round(msg.rank_eta || 55)
           });
         } else if (msg.msg === "process_starts") {
           onEvent({
             type: "processing",
-            eta: Math.round(msg.eta || 45),
+            eta: Math.round(msg.eta || 55),
             frames
           });
         } else if (msg.msg === "unexpected_error" || msg.msg === "queue_full") {
@@ -330,12 +438,11 @@ export default async function handler(req) {
       try {
         send({
           type: "init",
-          message: "Traduction fidèle de votre prompt et préparation des 81 frames continues (10.0s)..."
+          message: "Analyse visuelle bilingue (FR → EN + ZH) de votre prompt et lancement des 81 frames continues..."
         });
 
-        const translatedPrompt = await translateToEnglishServer(rawPrompt);
-        // Met le prompt de l'utilisateur en priorité absolue + cadrage rapproché dynamique et mouvement continu sur 81 frames (10s)
-        const fullPromptEn = `Close up dynamic tracking shot: ${translatedPrompt}. Fast continuous progressive action and camera movement from start to finish, ${style}.`;
+        const { fullPrompt, negativePrompt, promptEn } =
+          await buildBilingualVisualPrompt(rawPrompt, style);
 
         let startImagePath = body.startImagePath || null;
         if (!startImagePath && body.startImageBase64) {
@@ -358,7 +465,8 @@ export default async function handler(req) {
             }
 
             const result = await runContinuous81FramesAlibaba({
-              promptEn: fullPromptEn,
+              fullPrompt,
+              negativePrompt,
               aspect,
               speed: attempt > 0 ? "fast" : speed,
               isImage,
@@ -380,7 +488,7 @@ export default async function handler(req) {
               playbackRate: 1.0,
               engine: result.engine,
               promptOriginal: rawPrompt,
-              promptEn: translatedPrompt,
+              promptEn,
               attempt: attempt + 1
             });
             controller.close();
