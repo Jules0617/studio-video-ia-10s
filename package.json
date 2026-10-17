@@ -1,6 +1,7 @@
 {
   "name": "studio-video-ia-10s-mobile",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "Studio de génération de vidéos IA 10s gratuit et illimité (Wan 2.2, LTX-Video, CogVideoX, Omni-Video) prêt pour Vercel et Mobile"
+  "type": "module",
+  "description": "Studio de génération de vidéos IA 10s gratuit et illimité (Backend Cloud GPU Sans Quota ZeroGPU) prêt pour Vercel et Mobile"
 }
