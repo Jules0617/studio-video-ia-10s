@@ -94,11 +94,13 @@ async function runSingleAlibabaAttempt({
   const steps = speed === "high" && attemptIndex === 0 ? 14 : 10;
   const frames = isImage
     ? 1
-    : attemptIndex > 0
+    : startImagePath
       ? 5
-      : speed === "high"
-        ? 13
-        : 9;
+      : attemptIndex > 0
+        ? 5
+        : speed === "high"
+          ? 13
+          : 9;
 
   const genMethod = isImage ? "Image Generation" : "Video Generation";
   const seed = String(Math.floor(Math.random() * 99999999));
