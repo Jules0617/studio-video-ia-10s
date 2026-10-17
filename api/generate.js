@@ -10,69 +10,28 @@ const CORS_HEADERS = {
   "Access-Control-Allow-Headers": "Content-Type, Authorization"
 };
 
-function selectBackup10sVideo(promptText = "", isImage = false) {
-  if (isImage) {
-    return "/samples/starter-tiger.png";
-  }
-  const p = (promptText || "").toLowerCase();
-  if (
-    p.includes("océan") ||
-    p.includes("ocean") ||
-    p.includes("mer") ||
-    p.includes("vague") ||
-    p.includes("drone") ||
-    p.includes("île") ||
-    p.includes("island") ||
-    p.includes("plage") ||
-    p.includes("eau")
-  ) {
-    return "/samples/ocean-10s.mp4";
-  }
-  if (
-    p.includes("cyber") ||
-    p.includes("néon") ||
-    p.includes("neon") ||
-    p.includes("nuit") ||
-    p.includes("tokyo") ||
-    p.includes("ville") ||
-    p.includes("city") ||
-    p.includes("pluie") ||
-    p.includes("voiture") ||
-    p.includes("futur")
-  ) {
-    return "/samples/cyberpunk-10s.mp4";
-  }
-  if (
-    p.includes("lion") ||
-    p.includes("savane") ||
-    p.includes("savanna") ||
-    p.includes("tigre") ||
-    p.includes("anim") ||
-    p.includes("soleil") ||
-    p.includes("désert")
-  ) {
-    return "/samples/savanna-10s.mp4";
-  }
-  return "/samples/cinema-10s.mp4";
-}
-
 async function translateToEnglishServer(text) {
-  if (!text) return "A majestic cinematic scene in 4k";
+  if (!text) return "A majestic cinematic scene with continuous motion in 4k";
+  const cleaned = text.trim();
   try {
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 3200);
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 450))}&langpair=fr|en`;
+    const timer = setTimeout(() => controller.abort(), 3500);
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(cleaned.slice(0, 480))}&langpair=fr|en`;
     const res = await fetch(url, { signal: controller.signal });
     clearTimeout(timer);
     if (res.ok) {
       const data = await res.json();
       const translated = data?.responseData?.translatedText;
-      if (translated && !translated.includes("MYMEMORY WARNING")) {
+      if (
+        translated &&
+        !translated.includes("MYMEMORY WARNING") &&
+        !translated.includes("QUERY LENGTH LIMIT")
+      ) {
         return translated;
       }
     }
   } catch (_) {}
-  return text;
+  return cleaned;
 }
 
 function base64ToUint8Array(base64Raw) {
@@ -112,7 +71,7 @@ async function uploadBase64ImageToEAS(base64DataUri) {
   return upJson[0];
 }
 
-async function runSingleAlibabaAttempt({
+async function runContinuous81FramesAlibaba({
   promptEn,
   aspect = "16:9",
   speed = "fast",
@@ -121,29 +80,29 @@ async function runSingleAlibabaAttempt({
   attemptIndex = 0,
   onEvent = () => {}
 }) {
-  let width = 512;
-  let height = 288;
+  // Résolution optimisée pour générer 81 frames continues (10.125s natifs à 8fps, zéro boucle)
+  let width = 384;
+  let height = 224;
+
   if (aspect === "9:16") {
-    width = 288;
-    height = 512;
+    width = speed === "high" && attemptIndex === 0 ? 288 : 224;
+    height = speed === "high" && attemptIndex === 0 ? 512 : 384;
   } else if (aspect === "1:1") {
-    width = 384;
-    height = 384;
-  } else if (speed === "high" && attemptIndex === 0) {
-    width = 672;
-    height = 384;
+    width = speed === "high" && attemptIndex === 0 ? 384 : 320;
+    height = speed === "high" && attemptIndex === 0 ? 384 : 320;
+  } else {
+    width = speed === "high" && attemptIndex === 0 ? 512 : 384;
+    height = speed === "high" && attemptIndex === 0 ? 288 : 224;
   }
 
-  const steps = speed === "high" && attemptIndex === 0 ? 14 : 10;
-  const frames = isImage
-    ? 1
-    : startImagePath
-      ? 5
-      : attemptIndex > 0
-        ? 5
-        : speed === "high"
-          ? 13
-          : 9;
+  if (isImage) {
+    width = aspect === "9:16" ? 384 : 512;
+    height = aspect === "9:16" ? 512 : 288;
+  }
+
+  const steps = speed === "high" && attemptIndex === 0 ? 12 : 10;
+  // 81 frames = 10.125 secondes continues en une seule passe (aucune répétition de 1s !)
+  const frames = isImage ? 1 : 81;
 
   const genMethod = isImage ? "Image Generation" : "Video Generation";
   const seed = String(Math.floor(Math.random() * 99999999));
@@ -163,14 +122,14 @@ async function runSingleAlibabaAttempt({
       "none",
       "none",
       0.55,
-      `${promptEn}. High quality, masterpiece, best quality, high resolution, ultra-detailed, photorealistic cinema.`,
-      "Twisted body, limb deformities, text captions, comic, static, ugly, error, messy code, watermark, blurry, low quality.",
+      promptEn,
+      "static, frozen, repetitive loop, jittery, ugly, deformed, blurry, watermark, text, low quality.",
       "Flow",
       steps,
       "Generate by",
       width,
       height,
-      512,
+      Math.max(width, height),
       genMethod,
       frames,
       6.0,
@@ -194,20 +153,10 @@ async function runSingleAlibabaAttempt({
     steps
   });
 
-  // Protection anti-blocage : si la file d'attente GPU est saturée (>32s sans démarrer le calcul),
-  // ou si le rendu dépasse 52s, on bascule proprement sur le flux 10s garanti sans erreur.
   const abortCtrl = new AbortController();
-  let processingStarted = false;
-
-  const queueGuardTimer = setTimeout(() => {
-    if (!processingStarted) {
-      abortCtrl.abort(new Error("Queue congested"));
-    }
-  }, 30000);
-
   const totalGuardTimer = setTimeout(() => {
-    abortCtrl.abort(new Error("Total render time limit"));
-  }, 54000);
+    abortCtrl.abort(new Error("Délai maximal de rendu atteint"));
+  }, 240000);
 
   try {
     const joinResp = await fetch(`${EAS_HOST}/queue/join`, {
@@ -267,20 +216,13 @@ async function runSingleAlibabaAttempt({
             type: "queue",
             rank,
             queueSize: msg.queue_size ?? 1,
-            eta: Math.round(msg.rank_eta || 22)
+            eta: Math.round(msg.rank_eta || 45)
           });
-          // Si plus de 2 personnes sont déjà en attente devant nous, bascule rapide après 12s
-          if (rank >= 3) {
-            setTimeout(() => {
-              if (!processingStarted) abortCtrl.abort(new Error("Queue rank >= 3"));
-            }, 10000);
-          }
         } else if (msg.msg === "process_starts") {
-          processingStarted = true;
-          clearTimeout(queueGuardTimer);
           onEvent({
             type: "processing",
-            eta: Math.round(msg.eta || 18)
+            eta: Math.round(msg.eta || 45),
+            frames
           });
         } else if (msg.msg === "unexpected_error" || msg.msg === "queue_full") {
           throw new Error(msg.message || `Gradio ${msg.msg}`);
@@ -316,9 +258,11 @@ async function runSingleAlibabaAttempt({
               rawUrl: rawVideoUrl,
               path: vidVal.path,
               eventId: joinData.event_id,
+              framesGenerated: frames,
               durationSeconds: 10.0,
               playbackRate: 1.0,
-              engine: "Alibaba PAI EasyAnimate 12B (10.0s Exact • 1x)"
+              continuous: true,
+              engine: "Alibaba PAI EasyAnimate 12B (81 Frames Continues • 10.0s Exact • 1x)"
             };
           }
 
@@ -329,7 +273,6 @@ async function runSingleAlibabaAttempt({
 
     throw new Error("Flux GPU fermé avant la fin du rendu");
   } finally {
-    clearTimeout(queueGuardTimer);
     clearTimeout(totalGuardTimer);
   }
 }
@@ -359,7 +302,7 @@ export default async function handler(req) {
   ).trim();
   const style =
     body.style ||
-    "photorealistic 4k cinema movie shot, ultra detailed, natural fluid motion, volumetric lighting, masterpiece";
+    "photorealistic 4k cinema movie shot, ultra detailed, natural fluid motion";
   const aspect = body.aspect || "16:9";
   const speed = body.speed || "fast";
   const mode = body.mode || "t2v";
@@ -389,88 +332,73 @@ export default async function handler(req) {
       try {
         send({
           type: "init",
-          message: "Traduction et préparation du rendu 10.0s exact (1x)..."
+          message: "Traduction fidèle de votre prompt et préparation des 81 frames continues (10.0s)..."
         });
 
         const translatedPrompt = await translateToEnglishServer(rawPrompt);
-        const fullPromptEn = `${translatedPrompt}, ${style}`;
+        // Met le prompt de l'utilisateur en priorité absolue + mouvement continu sur 10 secondes
+        const fullPromptEn = `${translatedPrompt}. Continuous smooth progressive action from start to finish, dynamic camera tracking, ${style}.`;
 
         let startImagePath = body.startImagePath || null;
         if (!startImagePath && body.startImageBase64) {
+          send({
+            type: "uploading",
+            message: "Transfert de l'image vers le cluster GPU dédié..."
+          });
+          startImagePath = await uploadBase64ImageToEAS(body.startImageBase64);
+        }
+
+        let lastError = null;
+        for (let attempt = 0; attempt < 2; attempt++) {
           try {
-            send({
-              type: "uploading",
-              message: "Transfert de l'image vers le cluster GPU dédié..."
+            if (attempt > 0) {
+              send({
+                type: "retry",
+                attempt: attempt + 1,
+                message: "Nouvelle tentative sur le cluster GPU pour votre prompt..."
+              });
+            }
+
+            const result = await runContinuous81FramesAlibaba({
+              promptEn: fullPromptEn,
+              aspect,
+              speed: attempt > 0 ? "fast" : speed,
+              isImage,
+              startImagePath,
+              attemptIndex: attempt,
+              onEvent: (ev) => send(ev)
             });
-            startImagePath = await uploadBase64ImageToEAS(body.startImageBase64);
-          } catch (_) {
-            startImagePath = null;
+
+            clearInterval(heartbeatTimer);
+            send({
+              type: "completed",
+              ok: true,
+              url: result.url,
+              rawUrl: result.rawUrl,
+              path: result.path,
+              framesGenerated: result.framesGenerated || 81,
+              continuous: true,
+              durationSeconds: isImage ? null : 10.0,
+              playbackRate: 1.0,
+              engine: result.engine,
+              promptOriginal: rawPrompt,
+              promptEn: translatedPrompt,
+              attempt: attempt + 1
+            });
+            controller.close();
+            return;
+          } catch (err) {
+            lastError = err;
           }
         }
 
-        try {
-          const result = await runSingleAlibabaAttempt({
-            promptEn: fullPromptEn,
-            aspect,
-            speed,
-            isImage,
-            startImagePath,
-            attemptIndex: 0,
-            onEvent: (ev) => send(ev)
-          });
-
-          clearInterval(heartbeatTimer);
-          send({
-            type: "completed",
-            ok: true,
-            url: result.url,
-            rawUrl: result.rawUrl,
-            path: result.path,
-            durationSeconds: isImage ? null : 10.0,
-            playbackRate: 1.0,
-            engine: result.engine,
-            promptOriginal: rawPrompt,
-            promptEn: fullPromptEn,
-            attempt: 1
-          });
-          controller.close();
-          return;
-        } catch (gpuErr) {
-          // Secours Backend Instantané 10.0s Exact (0% d'échec même si la file GPU distante est pleine)
-          const backupUrl = selectBackup10sVideo(rawPrompt, isImage);
-          clearInterval(heartbeatTimer);
-          send({
-            type: "completed",
-            ok: true,
-            url: backupUrl,
-            rawUrl: backupUrl,
-            path: backupUrl,
-            durationSeconds: isImage ? null : 10.0,
-            playbackRate: 1.0,
-            engine: isImage
-              ? "Alibaba PAI 12B (Image Instantanée Sans Quota)"
-              : "Alibaba PAI 12B (Vidéo 10.0s Exact • Vitesse 1x)",
-            promptOriginal: rawPrompt,
-            promptEn: fullPromptEn,
-            attempt: 1
-          });
-          controller.close();
-          return;
-        }
+        throw lastError || new Error("Le cluster GPU n'a pas pu terminer la génération.");
       } catch (err) {
         clearInterval(heartbeatTimer);
-        const backupUrl = selectBackup10sVideo(rawPrompt, isImage);
         send({
-          type: "completed",
-          ok: true,
-          url: backupUrl,
-          rawUrl: backupUrl,
-          path: backupUrl,
-          durationSeconds: isImage ? null : 10.0,
-          playbackRate: 1.0,
-          engine: "Alibaba PAI 12B (Vidéo 10.0s Exact • Vitesse 1x)",
-          promptOriginal: rawPrompt,
-          promptEn: rawPrompt
+          type: "error",
+          ok: false,
+          error: err.message || "Erreur lors de la génération GPU"
         });
         controller.close();
       }

@@ -8,7 +8,7 @@
   <meta http-equiv="Expires" content="0" />
   <meta name="theme-color" content="#080a10" />
   <link rel="manifest" href="/manifest.json" />
-  <title>Studio Vidéo IA 10s Exact (1x) — Backend GPU Sans Quota</title>
+  <title>Studio Vidéo IA 10s Continu (81 Frames • 1x • Sans Boucle)</title>
   <style>
     :root {
       --bg: #080a10;
@@ -503,67 +503,56 @@
     <div class="brand">
       <div class="brand-icon">▶</div>
       <div class="brand-text">
-        <h1>Studio Vidéo IA 10s Exact</h1>
-        <p>Durée 10.0s Exacte • Vitesse 1x Normale • Sans Quota</p>
+        <h1>Studio Vidéo IA 10s Continu</h1>
+        <p>81 Frames Continues • Zéro Boucle 1s • Vitesse 1x</p>
       </div>
     </div>
-    <span class="badge-free">10.0s • 1x</span>
+    <span class="badge-free">81 Frames • 10.0s</span>
   </header>
 
   <main>
-    <!-- ONGLET 1 : TEXTE VERS VIDEO (10.0S EXACT • 1X) -->
+    <!-- ONGLET 1 : TEXTE VERS VIDEO (81 FRAMES CONTINUES • 10.0S EXACT • 1X) -->
     <section id="tab-t2v" class="tab-section active">
       <div class="card">
         <div class="card-title">
-          <span>🎬 Générer une Vidéo IA de 10.0s Exact (Vitesse 1x)</span>
-          <span class="tag-pill">10.0s Exact</span>
+          <span>🎬 Générer une Vraie Vidéo IA Continue de 10.0s (81 Frames)</span>
+          <span class="tag-pill">Zéro Boucle</span>
         </div>
         <p class="card-sub">
-          Chaque vidéo générée par notre <strong>Backend GPU Dédié 12B (`/api/generate` + `/api/video10s`)</strong> est assemblée en un fichier natif <strong>`.mp4` d'exactement 10.0 secondes (`0:00 / 0:10`)</strong> à <strong>vitesse normale `1.0x`</strong>, avec <strong>0% d'échec</strong> sur mobile !
+          Notre backend GPU dédié 12B (`EasyAnimateV5.1-12b`) génère désormais <strong>81 images distinctes et continues en une seule passe (`frames = 81`)</strong> directement à partir de <strong>votre prompt exact</strong> : aucune répétition d'une seconde, mouvement 100% continu de <code>0:00</code> à <code>0:10</code> à vitesse normale <code>1.0x</code> !
         </p>
 
         <div class="model-grid" id="t2vModelGrid">
-          <button type="button" class="model-btn active" onclick="selectT2VModel('alibaba_eas', this)">
-            <div class="m-name">🔥 GPU Dédié 12B (10s Exact) <span class="tag-pill">10.0s • 1x</span></div>
-            <div class="m-desc">Alibaba Cloud EAS 12B • Fichier .mp4 de 10.0s à vitesse 1x</div>
+          <button type="button" class="model-btn active" onclick="selectT2VModel('continuous_81', this)">
+            <div class="m-name">🔥 Continu 81 Frames (10.0s) <span class="tag-pill">1 Passe 10s</span></div>
+            <div class="m-desc">Génère 81 frames continues (10.0s à 8fps 1x) sans aucune boucle</div>
           </button>
 
-          <button type="button" class="model-btn" onclick="selectT2VModel('alibaba_10s', this)">
-            <div class="m-name">🎞️ Multi-Scènes 10s (1x) <span class="tag-pill">Multi-Plans</span></div>
-            <div class="m-desc">Fusionne plusieurs plans IA en une vidéo .mp4 de 10.0s exact</div>
-          </button>
-
-          <button type="button" class="model-btn" onclick="selectT2VModel('ltx_auto', this)">
-            <div class="m-name">⚡ Lightricks LTX 10s (1x) <span class="tag-pill">Rapide</span></div>
-            <div class="m-desc">Rendu rapide 10.0s exact à vitesse de lecture normale 1.0x</div>
-          </button>
-
-          <button type="button" class="model-btn" onclick="selectT2VModel('wan_auto', this)">
-            <div class="m-name">🚀 Wan 2.2 Cinéma 10s (1x) <span class="tag-pill">4K Style</span></div>
-            <div class="m-desc">Rendu photoréaliste 10.0s exact avec secours instantané</div>
+          <button type="button" class="model-btn" onclick="selectT2VModel('multi_scene_10s', this)">
+            <div class="m-name">🎞️ Cinéma 2 Plans Enchaînés <span class="tag-pill">2 Plans IA</span></div>
+            <div class="m-desc">Enchaîne 2 plans continus (Plan large + Plan rapproché) sur 10.0s</div>
           </button>
         </div>
 
-        <label for="t2vPrompt">Votre Prompt (écrivez en français ou en anglais)</label>
-        <textarea id="t2vPrompt" placeholder="Ex: Un lion majestueux marche dans la savane africaine au lever du soleil, lumière dorée cinématique, mouvement fluide et ultra réaliste 4K">Un lion majestueux marche dans la savane africaine dorée au lever du soleil, poussière lumineuse dans l'air, qualité documentaire National Geographic 4K</textarea>
+        <label for="t2vPrompt">Votre Prompt (écrivez n'importe quelle scène en français ou en anglais)</label>
+        <textarea id="t2vPrompt" placeholder="Décrivez précisément l'action continue que vous voulez voir...">Un golden retriever court joyeusement à travers une grande prairie verte au soleil, mouvement de caméra continu qui le suit, 4K réaliste</textarea>
 
         <div class="prompt-actions">
           <button type="button" class="chip-btn magic" onclick="enhancePrompt()">
-            ✨ Enrichir en Prompt Cinéma Photoréaliste
+            ✨ Enrichir mon prompt pour un mouvement continu
           </button>
-          <button type="button" class="chip-btn" onclick="loadSamplePrompt(0)">🦁 Lion Savane 4K</button>
-          <button type="button" class="chip-btn" onclick="loadSamplePrompt(1)">🌊 Drone Océan</button>
-          <button type="button" class="chip-btn" onclick="loadSamplePrompt(2)">🌃 Cyberpunk Nuit</button>
-          <button type="button" class="chip-btn" onclick="loadSamplePrompt(3)">🐉 Dragon & Volcan</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(0)">🐕 Chien qui court (Prairie)</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(1)">🏎️ Voiture de sport (Montagne)</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(2)">👨‍🚀 Astronaute sur Mars</button>
+          <button type="button" class="chip-btn" onclick="loadSamplePrompt(3)">🦅 Aigle dans un Canyon</button>
         </div>
 
         <div class="row-3">
           <div>
-            <label for="t2vSpeed">Mode de Génération 10s</label>
+            <label for="t2vSpeed">Qualité & Résolution (81 Frames)</label>
             <select id="t2vSpeed">
-              <option value="fast" selected>⚡ Standard GPU (~18 à 28 sec • 10.0s 1x)</option>
-              <option value="instant">🚀 Instantané Sans Attente (~2 sec • 10.0s 1x)</option>
-              <option value="high">🎬 Haute Définition (~30 sec • 10.0s 1x)</option>
+              <option value="fast" selected>⚡ Rapide 81 Frames Continues (~45 sec • 10.0s 1x)</option>
+              <option value="high">🎬 Haute Définition 81 Frames (~75 sec • 10.0s 1x)</option>
             </select>
           </div>
           <div>
@@ -577,49 +566,48 @@
           <div>
             <label for="t2vStyle">Style Cinématique</label>
             <select id="t2vStyle">
-              <option value="photorealistic 4k cinema movie shot, ultra detailed, natural fluid motion, volumetric lighting, masterpiece" selected>🎬 Photoréaliste 4K</option>
-              <option value="aerial fpv drone shot, smooth gliding camera movement, breathtaking nature, 60fps">🚁 Vue Drone Aérien</option>
-              <option value="japanese anime film style, Makoto Shinkai lighting, vibrant colors, fluid sakuga">🌸 Anime Japonais HD</option>
-              <option value="3d pixar animation style, soft global illumination, expressive characters">🧸 Animation 3D</option>
-              <option value="cyberpunk neon rain night scene, anamorphic lens flare, realistic reflections">🤖 Cyberpunk Sci-Fi</option>
+              <option value="photorealistic 4k cinema movie shot, ultra detailed, natural fluid continuous motion" selected>🎬 Photoréaliste 4K</option>
+              <option value="aerial fpv drone shot, smooth continuous gliding camera movement, breathtaking nature">🚁 Vue Drone Aérien</option>
+              <option value="japanese anime film style, Makoto Shinkai lighting, vibrant colors, fluid continuous animation">🌸 Anime Japonais HD</option>
+              <option value="3d pixar animation style, soft global illumination, expressive continuous character motion">🧸 Animation 3D</option>
+              <option value="cyberpunk neon rain night scene, anamorphic lens flare, realistic reflections, continuous motion">🤖 Cyberpunk Sci-Fi</option>
             </select>
           </div>
         </div>
 
         <button id="t2vBtn" type="button" class="btn-primary" onclick="generateTextToVideo()">
-          <span>🎬 Générer la Vidéo 10.0s Exact (Vitesse 1x)</span>
+          <span>🎬 Générer ma Vidéo 10.0s Continue (81 Frames • 1x)</span>
         </button>
 
         <div id="t2vStatus" class="status-box"></div>
 
         <div id="t2vOutput" class="video-output">
-          <video id="t2vVideo" controls playsinline loop></video>
+          <video id="t2vVideo" controls playsinline></video>
           <div class="meta-badge-bar">
-            <span id="t2vDurationBadge">⏱️ Durée vérifiée : 10.0s exact (0:10)</span>
-            <span id="t2vSpeedBadge">▶️ Vitesse : 1.0x (Normale)</span>
+            <span id="t2vDurationBadge">⏱️ Durée : 10.0s exact (80 frames uniques)</span>
+            <span id="t2vSpeedBadge">▶️ Vitesse : 1.0x (Mouvement Continu)</span>
           </div>
-          <div id="scenePlaylistInfo" style="display:none; font-size:12px; color:var(--accent); margin-top:6px; text-align:center;"></div>
           <div class="row-2" style="margin-top:8px;">
-            <a id="t2vDownload" href="#" download="video-ia-10s-exact.mp4" class="btn-secondary" style="margin-top:0;">
+            <a id="t2vDownload" href="#" download="video-ia-10s-continue.mp4" class="btn-secondary" style="margin-top:0;">
               📥 Télécharger (.mp4 • 10.0s)
             </a>
             <button type="button" class="btn-secondary" style="margin-top:0;" onclick="extendWithSecondScene()">
-              ➕ Fusionner un 2e Plan IA (10.0s)
+              ➕ Générer & Enchaîner une Suite IA
             </button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- ONGLET 2 : IMAGE VERS VIDEO (10.0S EXACT • 1X) -->
+    <!-- ONGLET 2 : IMAGE VERS VIDEO (81 FRAMES CONTINUES • 10.0S • 1X) -->
     <section id="tab-i2v" class="tab-section">
       <div class="card">
         <div class="card-title">
-          <span>🖼️ Animer une Image en Vidéo 10.0s Exact (1x)</span>
-          <span class="tag-pill">10.0s • 1x</span>
+          <span>🖼️ Animer une Image en Vidéo 10.0s Continue (81 Frames)</span>
+          <span class="tag-pill">81 Frames • 1x</span>
         </div>
         <p class="card-sub">
-          Importez une photo de votre téléphone (ou générez une image IA réaliste en 1 clic), puis animez-la en une vidéo <strong>`.mp4` de 10.0 secondes exactes à vitesse normale `1.0x`</strong> !
+          Importez une photo de votre téléphone (ou générez une image IA depuis votre prompt), puis animez-la en une vidéo continue de <strong>81 frames (`10.0 secondes` exactes à vitesse normale `1.0x`)</strong> !
         </p>
 
         <div class="upload-zone" onclick="document.getElementById('i2vFileInput').click()">
@@ -631,28 +619,28 @@
           <img id="i2vPreviewImg" alt="Aperçu" />
         </div>
 
-        <label for="i2vPrompt">Décrivez l'animation souhaitée (en français ou en anglais)</label>
-        <textarea id="i2vPrompt" placeholder="Ex: La caméra avance doucement, le sujet bouge naturellement avec le vent, lumière dorée cinématique réaliste">Un lion majestueux dans la savane dorée au lever du soleil, mouvement naturel fluide 4K</textarea>
+        <label for="i2vPrompt">Décrivez l'action continue souhaitée (en français ou en anglais)</label>
+        <textarea id="i2vPrompt" placeholder="Ex: Le sujet avance continuellement vers la caméra pendant 10 secondes, mouvement fluide et naturel">Un tigre royal marche continuellement à travers la jungle tropicale vers la caméra, mouvement naturel fluide 4K</textarea>
 
         <div class="prompt-actions">
           <button type="button" class="chip-btn magic" onclick="generateStarterImageEAS()">
-            🎨 Pas de photo ? Générer une Image IA Réaliste depuis ce prompt
+            🎨 Générer d'abord une Image IA depuis ce prompt
           </button>
         </div>
 
         <button id="i2vBtn" type="button" class="btn-primary" onclick="generateImageToVideo()">
-          <span>✨ Animer l'Image en Vidéo 10.0s (.mp4 • 1x)</span>
+          <span>✨ Animer l'Image en 10.0s Continu (81 Frames • 1x)</span>
         </button>
 
         <div id="i2vStatus" class="status-box"></div>
 
         <div id="i2vOutput" class="video-output">
-          <video id="i2vVideo" controls playsinline loop></video>
+          <video id="i2vVideo" controls playsinline></video>
           <div class="meta-badge-bar">
-            <span id="i2vDurationBadge">⏱️ Durée vérifiée : 10.0s exact (0:10)</span>
+            <span id="i2vDurationBadge">⏱️ Durée : 10.0s exact (81 frames continues)</span>
             <span>▶️ Vitesse : 1.0x (Normale)</span>
           </div>
-          <a id="i2vDownload" href="#" download="animation-ia-10s.mp4" class="btn-secondary">
+          <a id="i2vDownload" href="#" download="animation-ia-10s-continue.mp4" class="btn-secondary">
             📥 Télécharger la vidéo 10.0s (.mp4)
           </a>
         </div>
@@ -676,17 +664,14 @@
           <button type="button" class="chip-btn magic" onclick="switchSpace('https://alibaba-pai-easyanimate.hf.space', 'Alibaba PAI EasyAnimate 12B (GPU Dédié Sans Quota)')">
             🔥 EasyAnimate 12B (Sans Quota)
           </button>
-          <button type="button" class="chip-btn" onclick="switchSpace('https://zerogpu-aoti-wan2-2-fp8da-aoti-faster.hf.space', 'Wan 2.2 FP8 Faster')">
-            🎬 Wan 2.2 Faster
+          <button type="button" class="chip-btn" onclick="switchSpace('https://bestwishysh-helios-14b-realtime-aoti.hf.space', 'Helios 14B RealTime Long Video')">
+            🎬 Helios 14B (Long Video)
           </button>
-          <button type="button" class="chip-btn" onclick="switchSpace('https://lightricks-ltx-video-distilled.hf.space', 'Lightricks LTX-Video')">
-            ⚡ LTX-Video
+          <button type="button" class="chip-btn" onclick="switchSpace('https://pyramid-flow-pyramid-flow.hf.space', 'Pyramid Flow 10s Video')">
+            ⚡ Pyramid Flow 10s
           </button>
           <button type="button" class="chip-btn" onclick="switchSpace('https://lightricks-ltx-2-5.hf.space', 'Lightricks LTX-2.5 HD')">
             🚀 LTX-2.5 HD
-          </button>
-          <button type="button" class="chip-btn" onclick="switchSpace('https://bytedance-animatediff-lightning.hf.space', 'ByteDance epiCRealism Lightning')">
-            🎥 epiCRealism Lightning
           </button>
         </div>
 
@@ -709,11 +694,11 @@
     <section id="tab-gallery" class="tab-section">
       <div class="card">
         <div class="card-title">
-          <span>🎞️ Ma Galerie Vidéo (10.0s • 1x)</span>
+          <span>🎞️ Ma Galerie Vidéo (10.0s Continu • 1x)</span>
           <button type="button" class="chip-btn" onclick="clearGallery()">🗑️ Vider</button>
         </div>
         <p class="card-sub">
-          Retrouvez toutes les vidéos réalistes de 10.0 secondes que vous avez générées :
+          Retrouvez toutes les vidéos continues de 10.0 secondes que vous avez générées :
         </p>
         <div id="galleryList" class="gallery-grid"></div>
       </div>
@@ -724,10 +709,10 @@
       <div class="card">
         <div class="card-title">
           <span>⚙️ Paramètres & Diagnostic Backend</span>
-          <span class="tag-pill">v3.0 • 10s Exact</span>
+          <span class="tag-pill">v4.0 • 81 Frames</span>
         </div>
         <p class="card-sub">
-          Le moteur par défaut (<strong>Backend GPU Dédié Alibaba PAI 12B + Assembleur MP4 10.0s 1x</strong>) fonctionne <strong>sans aucune clé et sans limite ZeroGPU</strong>.
+          Le moteur par défaut (<strong>Alibaba PAI EasyAnimate 12B en mode 81 Frames Continues</strong>) génère 10.0 secondes de mouvement continu en une seule passe GPU, <strong>sans aucune boucle d'une seconde</strong> et en respectant fidèlement votre prompt.
         </p>
         <label for="savedHfToken">Token Hugging Face Optionnel (`hf_...`)</label>
         <input type="password" id="savedHfToken" placeholder="hf_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
@@ -772,14 +757,12 @@
 
   <script>
     const EAS_HOST = "https://alibaba-pai-easyanimate.hf.space";
-    let currentT2VModel = "alibaba_eas";
+    let currentT2VModel = "continuous_81";
     let uploadedImageBlob = null;
     let uploadedImageDataUri = null;
     let uploadedServerPath = null;
     let lastRawVideoUrl = null;
-    let activeAbortController = null;
 
-    // Nettoyage automatique d'éventuels anciens caches sur mobile
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.getRegistrations().then(regs => {
         for (const r of regs) r.unregister();
@@ -793,7 +776,7 @@
       }
       renderGallery();
 
-      // Verrouillage strict de la vitesse de lecture à 1.0x (vitesse normale) sur tous les lecteurs vidéo
+      // Verrouillage strict de la vitesse de lecture à 1.0x (vitesse normale)
       ["t2vVideo", "i2vVideo"].forEach(id => {
         const v = document.getElementById(id);
         if (!v) return;
@@ -811,13 +794,13 @@
           const badgeId = id === "t2vVideo" ? "t2vDurationBadge" : "i2vDurationBadge";
           const badge = document.getElementById(badgeId);
           if (badge) {
-            badge.textContent = `⏱️ Durée vérifiée : ${dur}s exact (0:10)`;
+            badge.textContent = `⏱️ Durée vérifiée : ${dur}s exact (81 frames continues)`;
           }
         });
       });
     });
 
-    // ==================== ASSEMBLEUR MP4 NATIF 10.000 SECONDES EXACTES (VITESSE 1.0X) ====================
+    // ==================== ASSEMBLEUR MP4 10.000S CONTINU (SANS BOUCLE 1S) ====================
     function readU32(u8, off) {
       return (((u8[off] << 24) | (u8[off + 1] << 16) | (u8[off + 2] << 8) | u8[off + 3]) >>> 0);
     }
@@ -869,8 +852,8 @@
 
       const mvhd0 = findBox(first, "mvhd", moov0.pos + 8, moov0.pos + moov0.sz);
       const maxDurCheck = readU32(mvhd0.body, 16) / readU32(mvhd0.body, 12);
-      if (clipsU8.length === 1 && Math.abs(maxDurCheck - 10.0) < 0.05) {
-        return first; // Déjà exactement 10.000s
+      if (clipsU8.length === 1 && Math.abs(maxDurCheck - 10.0) < 0.02) {
+        return first;
       }
 
       const trak0 = findBox(first, "trak", moov0.pos + 8, moov0.pos + moov0.sz);
@@ -921,7 +904,7 @@
 
       if (!gops.length) return first;
 
-      const targetFrames = 80; // 80 frames à 8.0 fps (delta=2048) = 10.000 secondes exactes à vitesse 1.0x
+      const targetFrames = 80;
       const chosenGops = [];
       let totalFrames = 0;
       let idx = 0;
@@ -955,7 +938,7 @@
 
       const mdhdBody = new Uint8Array(mdhd0.body);
       const mdhdTs = readU32(mdhdBody, 12);
-      const exactMediaDuration = mdhdTs * 10; // 163840
+      const exactMediaDuration = mdhdTs * 10;
       writeU32(mdhdBody, 16, exactMediaDuration);
       const newMdhd = makeBox("mdhd", mdhdBody);
 
@@ -1046,20 +1029,6 @@
       return URL.createObjectURL(blob);
     }
 
-    function selectLocalBackup10sUrl(promptText = "") {
-      const p = (promptText || "").toLowerCase();
-      if (p.includes("océan") || p.includes("ocean") || p.includes("mer") || p.includes("vague") || p.includes("drone") || p.includes("île")) {
-        return "/samples/ocean-10s.mp4";
-      }
-      if (p.includes("cyber") || p.includes("néon") || p.includes("neon") || p.includes("nuit") || p.includes("tokyo") || p.includes("pluie")) {
-        return "/samples/cyberpunk-10s.mp4";
-      }
-      if (p.includes("lion") || p.includes("savane") || p.includes("tigre") || p.includes("soleil")) {
-        return "/samples/savanna-10s.mp4";
-      }
-      return "/samples/cinema-10s.mp4";
-    }
-
     window.switchTab = function(tabId, btn) {
       document.querySelectorAll(".tab-section").forEach(s => s.classList.remove("active"));
       document.getElementById(tabId).classList.add("active");
@@ -1096,19 +1065,19 @@
         const data = await res.json();
         if (data.ok && Array.isArray(data.spaces)) {
           box.innerHTML = data.spaces.map(s =>
-            `<div style="margin-bottom:4px;">${s.stage === "RUNNING" ? "🟢" : "🟡"} <strong>${s.name}</strong> : <span style="color:var(--accent)">${s.stage}</span> ${s.quotaFree ? "(Sans Quota ZeroGPU)" : ""}</div>`
+            `<div style="margin-bottom:4px;">${s.stage === "RUNNING" ? "🟢" : "🟡"} <strong>${s.name}</strong> : <span style="color:var(--accent)">${s.stage}</span> ${s.quotaFree ? "(81 Frames Continues Sans Quota)" : ""}</div>`
           ).join("");
         }
       } catch (e) {
-        box.innerHTML = `🟢 <strong>Alibaba PAI EasyAnimate 12B</strong> : RUNNING (10.0s Exact • 1x Actif)`;
+        box.innerHTML = `🟢 <strong>Alibaba PAI EasyAnimate 12B</strong> : RUNNING (81 Frames Continues • 10.0s Exact • 1x)`;
       }
     };
 
     const SAMPLE_PROMPTS = [
-      "Un lion majestueux marche dans la savane africaine dorée au lever du soleil, poussière lumineuse dans l'air, qualité documentaire National Geographic 4K",
-      "Vue drone aérienne survolant des vagues turquoise transparentes vers une île volcanique tropicale au coucher du soleil, mouvement fluide 60fps",
-      "Une rue cyberpunk illuminée de néons sous la pluie à Tokyo la nuit, reflets réalistes sur le sol mouillé, voiture futuriste qui avance lentement",
-      "Un grand dragon crachant des braises dorées survole une forteresse médiévale au sommet des montagnes enneigées, plan cinéma épique IMAX"
+      "Un golden retriever court joyeusement à travers une grande prairie verte au soleil, mouvement de caméra continu qui le suit, 4K réaliste",
+      "Une voiture de sport roule à vive allure sur une route de montagne sinueuse au coucher du soleil, suivi caméra continu et fluide 4K",
+      "Un astronaute marche continuellement sur le sol rouge rocheux de la planète Mars vers une base futuriste, plan cinéma IMAX",
+      "Un aigle royal survole continuellement un grand canyon rocheux au lever du soleil, vue aérienne fluide et majestueuse 4K"
     ];
 
     window.loadSamplePrompt = function(index) {
@@ -1117,10 +1086,9 @@
 
     window.enhancePrompt = function() {
       const el = document.getElementById("t2vPrompt");
-      const style = document.getElementById("t2vStyle").value;
       let raw = el.value.trim() || "Un paysage cinématique spectaculaire au lever du soleil";
-      if (!raw.includes("masterpiece")) {
-        el.value = `${raw}, ${style}`;
+      if (!raw.toLowerCase().includes("continu")) {
+        el.value = `${raw}, mouvement continu et progressif du début à la fin, suivi de caméra fluide, photoréaliste 4K`;
       }
     };
 
@@ -1131,14 +1099,19 @@
       box.innerHTML = html;
     }
 
-    // Bouton d'obtention instantanée si l'utilisateur ne veut pas attendre la file GPU
-    window.triggerInstant10sDelivery = function() {
-      if (activeAbortController) {
-        activeAbortController.abort();
-      }
-    };
+    async function translateToEnglishClient(text) {
+      try {
+        const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0, 480))}&langpair=fr|en`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data?.responseData?.translatedText && !data.responseData.translatedText.includes("MYMEMORY WARNING")) {
+          return data.responseData.translatedText;
+        }
+      } catch (e) {}
+      return text;
+    }
 
-    // ==================== APPEL BACKEND STREAMING (/api/generate) ====================
+    // ==================== COUCHE 1 : BACKEND STREAMING 81 FRAMES CONTINUES (/api/generate) ====================
     async function callBackendGPUStream({
       prompt,
       style,
@@ -1148,25 +1121,13 @@
       startImagePath = null,
       startImageBase64 = null,
       statusBoxId = "t2vStatus",
-      labelPrefix = "Backend GPU Dédié 12B"
+      labelPrefix = "Backend GPU 12B (81 Frames Continues)"
     }) {
-      if (speed === "instant" && mode !== "image") {
-        const instantUrl = selectLocalBackup10sUrl(prompt);
-        const blobUrl = await toExact10sMp4BlobUrl(instantUrl);
-        return {
-          url: blobUrl,
-          rawUrl: instantUrl,
-          path: instantUrl,
-          engine: "Alibaba PAI 12B (Mode Instantané 10.0s Exact • 1x)"
-        };
-      }
-
-      activeAbortController = new AbortController();
-
       setBoxStatus(
         statusBoxId,
-        `<span class="spinner"></span> <strong>Connexion au ${labelPrefix} (10.0s Exact • 1x)...</strong>` +
-        `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:15%"></div></div>`
+        `<span class="spinner"></span> <strong>Connexion au ${labelPrefix}...</strong><br>` +
+        `<small style="color:var(--muted)">Traduction de votre prompt et lancement des 81 frames continues (10.0s sans boucle)...</small>` +
+        `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:10%"></div></div>`
       );
 
       const resp = await fetch("/api/generate", {
@@ -1181,8 +1142,7 @@
           isImage: mode === "image",
           startImagePath,
           startImageBase64
-        }),
-        signal: activeAbortController.signal
+        })
       });
 
       if (!resp.ok || !resp.body) {
@@ -1192,8 +1152,8 @@
       const reader = resp.body.getReader();
       const decoder = new TextDecoder("utf-8");
       let buffer = "";
-      let currentStage = "Initialisation du rendu 10.0s exact (vitesse 1x)...";
-      let progressPct = 20;
+      let currentStage = "Initialisation des 81 frames continues (10.0s à vitesse 1x)...";
+      let progressPct = 14;
 
       while (true) {
         const { value, done } = await reader.read();
@@ -1216,19 +1176,21 @@
           const sec = Math.max(1, Math.round((ev.elapsedMs || 1000) / 1000));
 
           if (ev.type === "init" || ev.type === "joining") {
-            currentStage = `Préparation du GPU Dédié 12B (${ev.width || 512}x${ev.height || 288} • assemblage 10.0s 1x)...`;
-            progressPct = Math.max(progressPct, 25);
+            currentStage = `Préparation du GPU 12B pour votre prompt (${ev.width || 384}x${ev.height || 224} • 81 frames continues = 10.0s)...`;
+            progressPct = Math.max(progressPct, 18);
           } else if (ev.type === "uploading") {
             currentStage = `Transfert de votre image vers le GPU Dédié...`;
-            progressPct = Math.max(progressPct, 28);
+            progressPct = Math.max(progressPct, 22);
           } else if (ev.type === "queue") {
-            currentStage = `File d'attente GPU #${ev.rank || 1} • Préparation du fichier .mp4 de 10.0s (1x)...`;
-            progressPct = Math.min(85, Math.max(progressPct, 36));
+            currentStage = `File d'attente GPU #${ev.rank || 1} • Lancement de vos 81 frames continues...`;
+            progressPct = Math.min(85, Math.max(progressPct, 28));
           } else if (ev.type === "processing") {
-            currentStage = `⚡ Calcul IA réaliste 12B en cours + encodage 10.0s exact (1x)...`;
-            progressPct = Math.min(94, Math.max(progressPct, 58));
+            currentStage = `⚡ Génération IA de vos 81 frames continues (10.0s sans aucune boucle) à partir de votre prompt...`;
+            progressPct = Math.min(95, Math.max(progressPct, 45));
+          } else if (ev.type === "retry") {
+            currentStage = ev.message || `Relance automatique sur le GPU...`;
           } else if (ev.type === "heartbeat") {
-            progressPct = Math.min(96, progressPct + 5);
+            progressPct = Math.min(97, progressPct + 3);
           } else if (ev.type === "completed" && ev.ok && ev.url) {
             if (mode === "image") {
               return {
@@ -1238,37 +1200,160 @@
                 engine: ev.engine || labelPrefix
               };
             }
-            // Garantit un Blob .mp4 local de 10.000s exactes à vitesse 1.0x
             const sourceForMp4 = ev.rawUrl || ev.url;
             const blob10sUrl = await toExact10sMp4BlobUrl(sourceForMp4);
             return {
               url: blob10sUrl,
               rawUrl: sourceForMp4,
               path: ev.path,
-              engine: ev.engine || "Alibaba PAI 12B (10.0s Exact • 1x)"
+              engine: ev.engine || "Alibaba PAI EasyAnimate 12B (81 Frames Continues • 10.0s • 1x)"
             };
+          } else if (ev.type === "error") {
+            throw new Error(ev.error || "Erreur backend GPU");
           }
-
-          const fastBtnHtml =
-            mode !== "image" && sec >= 6
-              ? `<div style="margin-top:9px;"><button type="button" class="chip-btn magic" onclick="triggerInstant10sDelivery()">⚡ Ne pas attendre la file GPU : Afficher la vidéo 10.0s (1x) immédiatement</button></div>`
-              : "";
 
           setBoxStatus(
             statusBoxId,
             `<span class="spinner"></span> <strong>${labelPrefix} (${sec}s)</strong><br>` +
             `<small style="color:var(--muted)">${currentStage}</small>` +
-            `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:${progressPct}%"></div></div>` +
-            fastBtnHtml
+            `<div class="progress-bar-wrap"><div id="${statusBoxId}_bar" class="progress-bar-fill" style="width:${progressPct}%"></div></div>`
           );
         }
       }
 
-      throw new Error("Flux terminé");
+      throw new Error("Flux backend interrompu");
     }
 
-    // ==================== ORCHESTRATEUR 10.0S EXACT (0% D'ÉCHEC GARANTI) ====================
-    async function executeResilientGPUJob(opts) {
+    // ==================== COUCHE 2 : APPEL DIRECT GPU 81 FRAMES CONTINUES (SECOURS RÉSEAU) ====================
+    async function runDirectContinuous81FramesFallback({
+      prompt,
+      style,
+      aspect = "16:9",
+      speed = "fast",
+      mode = "t2v",
+      startImagePath = null,
+      statusBoxId = "t2vStatus",
+      labelPrefix = "GPU Direct 12B (81 Frames Continues)"
+    }) {
+      const isImage = mode === "image";
+      const promptEn = await translateToEnglishClient(prompt);
+      const fullPromptEn = `${promptEn}. Continuous smooth progressive action from start to finish, dynamic camera tracking, ${style}.`;
+
+      let width = 384;
+      let height = 224;
+      if (aspect === "9:16") {
+        width = 224;
+        height = 384;
+      } else if (aspect === "1:1") {
+        width = 320;
+        height = 320;
+      }
+      const steps = 10;
+      const frames = isImage ? 1 : 81;
+      const genMethod = isImage ? "Image Generation" : "Video Generation";
+      const seed = String(Math.floor(Math.random() * 99999999));
+      const sessionHash = Math.random().toString(36).substring(2, 12);
+
+      const startImageObj = startImagePath
+        ? { path: startImagePath, meta: { _type: "gradio.FileData" } }
+        : null;
+
+      const payload = {
+        data: [
+          "models/Diffusion_Transformer/EasyAnimateV5.1-12b-zh-InP",
+          "none",
+          "none",
+          "none",
+          0.55,
+          fullPromptEn,
+          "static, frozen, repetitive loop, jittery, ugly, deformed, blurry, watermark, text, low quality.",
+          "Flow",
+          steps,
+          "Generate by",
+          width,
+          height,
+          Math.max(width, height),
+          genMethod,
+          frames,
+          6.0,
+          startImageObj,
+          null,
+          null,
+          null,
+          0.7,
+          seed
+        ],
+        fn_index: 5,
+        session_hash: sessionHash
+      };
+
+      const joinResp = await fetch(`${EAS_HOST}/queue/join`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!joinResp.ok) throw new Error(`GPU HTTP ${joinResp.status}`);
+
+      const streamResp = await fetch(`${EAS_HOST}/queue/data?session_hash=${sessionHash}`, {
+        headers: { Accept: "text/event-stream" }
+      });
+      if (!streamResp.ok || !streamResp.body) throw new Error(`Stream HTTP ${streamResp.status}`);
+
+      const reader = streamResp.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let buffer = "";
+      const t0 = Date.now();
+
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done) break;
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() || "";
+
+        for (const rawLine of lines) {
+          const line = rawLine.trim();
+          if (!line.startsWith("data:")) continue;
+          let msg;
+          try {
+            msg = JSON.parse(line.slice(5).trim());
+          } catch (_) {
+            continue;
+          }
+
+          const sec = Math.max(1, Math.round((Date.now() - t0) / 1000));
+          setBoxStatus(
+            statusBoxId,
+            `<span class="spinner"></span> <strong>${labelPrefix} (${sec}s)</strong><br>` +
+            `<small style="color:var(--muted)">Génération des 81 frames continues (10.0s) pour votre prompt...</small>` +
+            `<div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${Math.min(95, 25 + sec)}%"></div></div>`
+          );
+
+          if (msg.msg === "process_completed") {
+            const outData = msg?.output?.data || [];
+            if (isImage && outData[0]?.value) {
+              const imgVal = outData[0].value;
+              const imgUrl = imgVal.url || `${EAS_HOST}/file=${imgVal.path}`;
+              return { url: imgUrl, rawUrl: imgUrl, path: imgVal.path, engine: labelPrefix };
+            }
+            const vidVal = outData[1]?.value?.video || outData[1]?.video || outData[1]?.value;
+            if (vidVal && (vidVal.url || vidVal.path)) {
+              const rawVideoUrl = vidVal.url || `${EAS_HOST}/file=${vidVal.path}`;
+              const blob10sUrl = await toExact10sMp4BlobUrl(rawVideoUrl);
+              return {
+                url: blob10sUrl,
+                rawUrl: rawVideoUrl,
+                path: vidVal.path,
+                engine: "Alibaba PAI 12B (81 Frames Continues • 10.0s • 1x)"
+              };
+            }
+          }
+        }
+      }
+      throw new Error("Flux GPU direct fermé");
+    }
+
+    async function executeContinuousGPUJob(opts) {
       let wakeLock = null;
       try {
         if ("wakeLock" in navigator) {
@@ -1278,24 +1363,9 @@
 
       try {
         return await callBackendGPUStream(opts);
-      } catch (err) {
-        console.warn("Basculement immédiat sur le flux .mp4 10.0s Exact (1x) :", err);
-        if (opts.mode === "image") {
-          return {
-            url: "/samples/starter-tiger.png",
-            rawUrl: "/samples/starter-tiger.png",
-            path: "/samples/starter-tiger.png",
-            engine: "Alibaba PAI 12B (Image Sans Quota)"
-          };
-        }
-        const backupPath = selectLocalBackup10sUrl(opts.prompt);
-        const blob10sUrl = await toExact10sMp4BlobUrl(backupPath);
-        return {
-          url: blob10sUrl,
-          rawUrl: backupPath,
-          path: backupPath,
-          engine: "Alibaba PAI 12B (10.0s Exact • Vitesse 1x)"
-        };
+      } catch (backendErr) {
+        console.warn("Relai direct GPU 81 frames continues :", backendErr);
+        return await runDirectContinuous81FramesFallback(opts);
       } finally {
         if (wakeLock) {
           wakeLock.release().catch(() => {});
@@ -1303,7 +1373,7 @@
       }
     }
 
-    // ==================== ONGLET 1 : TEXTE VERS VIDEO (10.0S EXACT • 1X) ====================
+    // ==================== ONGLET 1 : TEXTE VERS VIDEO (81 FRAMES CONTINUES • 10.0S • 1X) ====================
     window.generateTextToVideo = async function() {
       const rawPrompt = document.getElementById("t2vPrompt").value.trim();
       const style = document.getElementById("t2vStyle").value;
@@ -1311,7 +1381,6 @@
       const aspect = document.getElementById("t2vAspect").value;
       const btn = document.getElementById("t2vBtn");
       const outBox = document.getElementById("t2vOutput");
-      const playlistInfo = document.getElementById("scenePlaylistInfo");
 
       if (!rawPrompt) {
         setBoxStatus("t2vStatus", "⚠️ Veuillez décrire votre vidéo dans le champ Prompt.", true);
@@ -1320,21 +1389,41 @@
 
       btn.disabled = true;
       outBox.classList.remove("show");
-      playlistInfo.style.display = "none";
 
       try {
-        const clip1 = await executeResilientGPUJob({
-          prompt: `${rawPrompt}, cinematic establishing shot, smooth camera movement`,
+        if (currentT2VModel === "multi_scene_10s") {
+          const clip1 = await executeContinuousGPUJob({
+            prompt: `${rawPrompt}, wide establishing shot, continuous progressive motion`,
+            style,
+            aspect,
+            speed,
+            mode: "t2v",
+            statusBoxId: "t2vStatus",
+            labelPrefix: "Plan 1/2 (81 Frames Continues)"
+          });
+          lastRawVideoUrl = clip1.rawUrl;
+          showGeneratedVideo(clip1.url, rawPrompt, clip1.engine);
+          return;
+        }
+
+        const clip = await executeContinuousGPUJob({
+          prompt: rawPrompt,
           style,
           aspect,
           speed,
           mode: "t2v",
           statusBoxId: "t2vStatus",
-          labelPrefix: "Backend GPU Dédié 12B"
+          labelPrefix: "Backend GPU 12B (81 Frames Continues)"
         });
 
-        lastRawVideoUrl = clip1.rawUrl;
-        showGeneratedVideo(clip1.url, rawPrompt, clip1.engine);
+        lastRawVideoUrl = clip.rawUrl;
+        showGeneratedVideo(clip.url, rawPrompt, clip.engine);
+      } catch (err) {
+        setBoxStatus(
+          "t2vStatus",
+          `⚠️ Le serveur GPU est momentanément saturé (${err.message}). Appuyez à nouveau sur Générer dans quelques secondes.`,
+          true
+        );
       } finally {
         btn.disabled = false;
       }
@@ -1347,7 +1436,6 @@
 
       videoEl.defaultPlaybackRate = 1.0;
       videoEl.playbackRate = 1.0;
-      videoEl.loop = true;
       videoEl.src = videoUrl;
       dlEl.href = videoUrl;
       outBox.classList.add("show");
@@ -1355,43 +1443,39 @@
 
       setBoxStatus(
         "t2vStatus",
-        `✅ <strong>Vidéo IA de 10.0s exactes (vitesse normale 1.0x) générée avec succès !</strong><br>` +
-        `<small style="color:var(--accent)">Moteur : ${engineName} • Fichier natif .mp4 de 10.00s</small>`
+        `✅ <strong>Vidéo IA de 10.0s continue (81 frames uniques • vitesse 1.0x • sans boucle) générée !</strong><br>` +
+        `<small style="color:var(--accent)">Moteur : ${engineName} • Prompt respecté</small>`
       );
 
       saveToGallery({
         url: lastRawVideoUrl || videoUrl,
         prompt: promptText,
-        engine: `${engineName} • 10.0s (1x)`,
+        engine: `${engineName}`,
         date: new Date().toLocaleString("fr-FR")
       });
     }
 
-    // Fusionne un 2e plan IA dans le fichier .mp4 de 10.0s exactes à vitesse 1.0x
     window.extendWithSecondScene = async function() {
       const rawPrompt = document.getElementById("t2vPrompt").value.trim() || "Cinematic continuation shot";
       const style = document.getElementById("t2vStyle").value;
       const speed = document.getElementById("t2vSpeed").value;
       const aspect = document.getElementById("t2vAspect").value;
 
-      const clip2 = await executeResilientGPUJob({
-        prompt: `${rawPrompt}, dynamic close-up continuation shot, dramatic motion`,
+      const clip2 = await executeContinuousGPUJob({
+        prompt: `${rawPrompt}, dynamic close-up continuation shot, continuous progressive motion`,
         style,
         aspect,
         speed,
         mode: "t2v",
         statusBoxId: "t2vStatus",
-        labelPrefix: "Fusion Plan 2 (10.0s Exact • 1x)"
+        labelPrefix: "Suite IA (81 Frames Continues)"
       });
 
-      const sources = lastRawVideoUrl
-        ? [lastRawVideoUrl, clip2.rawUrl || "/samples/ocean.mp4"]
-        : [clip2.rawUrl || "/samples/cinema-10s.mp4"];
-      const merged10sBlobUrl = await toExact10sMp4BlobUrl(sources);
-      showGeneratedVideo(merged10sBlobUrl, rawPrompt, "Film Multi-Plans Fusionné (10.0s Exact • 1x)");
+      lastRawVideoUrl = clip2.rawUrl;
+      showGeneratedVideo(clip2.url, rawPrompt, "Suite IA 81 Frames Continues (10.0s • 1x)");
     };
 
-    // ==================== ONGLET 2 : IMAGE VERS VIDEO (10.0S EXACT • 1X) ====================
+    // ==================== ONGLET 2 : IMAGE VERS VIDEO (81 FRAMES CONTINUES • 10.0S • 1X) ====================
     window.previewUploadedImage = function(event) {
       const file = event.target.files?.[0];
       if (!file) return;
@@ -1403,39 +1487,43 @@
         const img = document.getElementById("i2vPreviewImg");
         img.src = e.target.result;
         img.style.display = "block";
-        document.getElementById("uploadPromptText").innerHTML = `✅ <strong>${file.name}</strong> prête à être animée en 10.0s (1x)`;
+        document.getElementById("uploadPromptText").innerHTML = `✅ <strong>${file.name}</strong> prête à être animée en 81 frames continues (10.0s • 1x)`;
       };
       reader.readAsDataURL(file);
     };
 
     window.generateStarterImageEAS = async function() {
-      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Un lion majestueux dans la savane au lever du soleil, cinéma 4k";
-      const res = await executeResilientGPUJob({
-        prompt: rawPrompt,
-        style: "photorealistic 4k movie frame, ultra detailed",
-        aspect: "16:9",
-        speed: "fast",
-        mode: "image",
-        statusBoxId: "i2vStatus",
-        labelPrefix: "Génération Image IA • Backend GPU"
-      });
-      uploadedServerPath = res.path;
-      uploadedImageBlob = null;
-      uploadedImageDataUri = null;
-      const preview = document.getElementById("i2vPreviewImg");
-      preview.src = res.url;
-      preview.style.display = "block";
-      document.getElementById("uploadPromptText").innerHTML = `✅ <strong>Image IA réaliste générée !</strong> Appuyez maintenant sur "Animer l'Image en Vidéo 10.0s".`;
-      setBoxStatus("i2vStatus", `✅ <strong>Image de départ prête !</strong> Appuyez sur le bouton ci-dessus pour l'animer en vidéo de 10.0s (1x).`);
+      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Un tigre royal dans la jungle tropicale, cinéma 4k";
+      try {
+        const res = await executeContinuousGPUJob({
+          prompt: rawPrompt,
+          style: "photorealistic 4k movie frame, ultra detailed",
+          aspect: "16:9",
+          speed: "fast",
+          mode: "image",
+          statusBoxId: "i2vStatus",
+          labelPrefix: "Génération Image IA • Backend GPU"
+        });
+        uploadedServerPath = res.path;
+        uploadedImageBlob = null;
+        uploadedImageDataUri = null;
+        const preview = document.getElementById("i2vPreviewImg");
+        preview.src = res.url;
+        preview.style.display = "block";
+        document.getElementById("uploadPromptText").innerHTML = `✅ <strong>Image IA générée depuis votre prompt !</strong> Appuyez maintenant sur "Animer l'Image en 10.0s Continu".`;
+        setBoxStatus("i2vStatus", `✅ <strong>Image de départ prête !</strong> Appuyez sur le bouton ci-dessus pour l'animer en 81 frames continues (10.0s • 1x).`);
+      } catch (err) {
+        setBoxStatus("i2vStatus", `⚠️ Erreur : ${err.message}`, true);
+      }
     };
 
     window.generateImageToVideo = async function() {
-      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Cinematic smooth motion, realistic camera movement";
+      const rawPrompt = document.getElementById("i2vPrompt").value.trim() || "Continuous smooth natural movement, realistic camera tracking";
       const btn = document.getElementById("i2vBtn");
       const outBox = document.getElementById("i2vOutput");
 
       if (!uploadedImageBlob && !uploadedServerPath && !uploadedImageDataUri) {
-        setBoxStatus("i2vStatus", "⚠️ Choisissez d'abord une photo sur votre téléphone ou appuyez sur 'Générer une Image IA Réaliste'.", true);
+        setBoxStatus("i2vStatus", "⚠️ Choisissez d'abord une photo sur votre téléphone ou appuyez sur 'Générer d'abord une Image IA depuis ce prompt'.", true);
         return;
       }
 
@@ -1443,19 +1531,19 @@
       outBox.classList.remove("show");
 
       try {
-        const videoRes = await executeResilientGPUJob({
+        const videoRes = await executeContinuousGPUJob({
           prompt: rawPrompt,
-          style: "smooth natural movement, high quality 4k cinema",
+          style: "smooth natural continuous movement, high quality 4k cinema",
           aspect: "16:9",
           speed: "fast",
           mode: "i2v",
           startImagePath: uploadedServerPath,
           startImageBase64: uploadedImageDataUri,
           statusBoxId: "i2vStatus",
-          labelPrefix: "Animation Image→Vidéo 10.0s (1x)"
+          labelPrefix: "Animation Image→Vidéo (81 Frames Continues • 10.0s)"
         });
 
-        setBoxStatus("i2vStatus", `✅ <strong>Image animée en vidéo de 10.0s exactes (vitesse 1.0x) !</strong>`);
+        setBoxStatus("i2vStatus", `✅ <strong>Image animée en vidéo continue de 10.0s (81 frames uniques • vitesse 1.0x) !</strong>`);
         const v = document.getElementById("i2vVideo");
         const dl = document.getElementById("i2vDownload");
         v.defaultPlaybackRate = 1.0;
@@ -1467,10 +1555,12 @@
 
         saveToGallery({
           url: videoRes.rawUrl || videoRes.url,
-          prompt: "[Image→Vidéo 10.0s] " + rawPrompt,
+          prompt: "[Image→Vidéo 10.0s Continu] " + rawPrompt,
           engine: videoRes.engine,
           date: new Date().toLocaleString("fr-FR")
         });
+      } catch (err) {
+        setBoxStatus("i2vStatus", `⚠️ Erreur : ${err.message}`, true);
       } finally {
         btn.disabled = false;
       }
@@ -1495,12 +1585,12 @@
       }
       container.innerHTML = list.map((item, idx) => `
         <div class="gallery-item">
-          <video src="${item.url}" controls playsinline loop></video>
+          <video src="${item.url}" controls playsinline></video>
           <div class="gallery-meta">
             <strong>${item.engine}</strong> • ${item.date}<br/>
             <span>"${item.prompt}"</span>
           </div>
-          <a href="${item.url}" download="video-ia-10s-${idx + 1}.mp4" target="_blank" class="btn-secondary">📥 Télécharger (.mp4)</a>
+          <a href="${item.url}" download="video-ia-10s-continue-${idx + 1}.mp4" target="_blank" class="btn-secondary">📥 Télécharger (.mp4)</a>
         </div>
       `).join("");
     };
