@@ -4,6 +4,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import generateHandler from "./api/generate.js";
 import statusHandler from "./api/status.js";
+import video10sHandler from "./api/video10s.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3000;
@@ -22,9 +23,13 @@ const server = http.createServer(async (req, res) => {
   try {
     const urlObj = new URL(req.url, `http://${req.headers.host || "localhost"}`);
 
-    if (urlObj.pathname === "/api/generate" || urlObj.pathname === "/api/status") {
+    if (
+      urlObj.pathname === "/api/generate" ||
+      urlObj.pathname === "/api/status" ||
+      urlObj.pathname === "/api/video10s"
+    ) {
       const chunks = [];
-      for await (const chunk of chunks.length ? chunks : req) {
+      for await (const chunk of req) {
         chunks.push(chunk);
       }
       const bodyBuffer = Buffer.concat(chunks);
@@ -34,7 +39,12 @@ const server = http.createServer(async (req, res) => {
         body: ["GET", "HEAD"].includes(req.method) ? undefined : bodyBuffer
       });
 
-      const handler = urlObj.pathname === "/api/generate" ? generateHandler : statusHandler;
+      const handler =
+        urlObj.pathname === "/api/generate"
+          ? generateHandler
+          : urlObj.pathname === "/api/video10s"
+            ? video10sHandler
+            : statusHandler;
       const webResp = await handler(webReq);
 
       res.statusCode = webResp.status;
@@ -52,13 +62,17 @@ const server = http.createServer(async (req, res) => {
       return;
     }
 
-    let filePath = path.join(__dirname, urlObj.pathname === "/" ? "index.html" : urlObj.pathname);
+    let filePath = path.join(
+      __dirname,
+      urlObj.pathname === "/" ? "index.html" : urlObj.pathname
+    );
     if (!fs.existsSync(filePath) || fs.statSync(filePath).isDirectory()) {
       filePath = path.join(__dirname, "index.html");
     }
 
     const ext = path.extname(filePath);
     res.setHeader("Content-Type", MIME_TYPES[ext] || "application/octet-stream");
+    res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, max-age=0");
     fs.createReadStream(filePath).pipe(res);
   } catch (err) {
     res.statusCode = 500;
